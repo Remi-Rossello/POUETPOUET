@@ -4,21 +4,33 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const allowedOrigins = [
+const exactAllowedOrigins = [
   'http://localhost:5173',
-  'https://remi-rossello.up.railway.app/',
+  'https://remi-rossello.up.railway.app',
   process.env.FRONTEND_ORIGIN
 ].filter(Boolean);
+
+function isAllowedOrigin(origin) {
+  if (!origin) {
+    return true;
+  }
+
+  if (exactAllowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  return /^https:\/\/[a-z0-9-]+\.up\.railway\.app$/i.test(origin);
+}
 
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
 
-      callback(new Error('Not allowed by CORS'));
+      callback(null, false);
     }
   })
 );
