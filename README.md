@@ -1,7 +1,7 @@
 ## Project Structure
 
 - `frontend/`: static website files (pages, CSS, images, documents).
-- `backend/`: Express server that serves the frontend.
+- `backend/`: Express server
 
 ## Run Locally
 
