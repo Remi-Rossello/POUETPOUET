@@ -7,7 +7,7 @@ function CallBackendButton() {
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      const result = await fetch("http://backend-production-rossello.up.railway.app/api/hello");
+      const result = await fetch("https://backend-production-rossello.up.railway.app/api/hello");
       if (!result.ok) {
         throw new Error("Request failed");
       }
