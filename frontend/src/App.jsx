@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import CallBackendButton from "./components/CallBackendButton";
 
 const journeyItems = [
   {
@@ -45,6 +46,7 @@ function App() {
           <button className="button button-secondary" onClick={() => setView("journey")} type="button">
             Computer Journey
           </button>
+          <CallBackendButton />
         </nav>
       </section>
 

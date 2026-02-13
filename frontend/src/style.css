@@ -70,6 +70,18 @@ h1 {
   flex-wrap: wrap;
 }
 
+.backend-call {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backend-response {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
 .button {
   display: inline-block;
   padding: 0.8rem 1.1rem;
