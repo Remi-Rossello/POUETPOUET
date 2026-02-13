@@ -1,0 +1,128 @@
+:root {
+  --bg-overlay: rgba(9, 12, 20, 0.68);
+  --surface: rgba(15, 23, 42, 0.84);
+  --surface-alt: rgba(15, 23, 42, 0.6);
+  --text-main: #f8fafc;
+  --text-soft: #cbd5e1;
+  --primary: #2563eb;
+  --primary-soft: #1d4ed8;
+  --border: rgba(148, 163, 184, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("../images/background.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.page-shell {
+  width: min(960px, 92%);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(6px);
+}
+
+.hero {
+  text-align: center;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.8rem;
+}
+
+.subtitle {
+  color: var(--text-soft);
+  margin-bottom: 1.8rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-main);
+  background: var(--primary);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background: var(--primary-soft);
+  transform: translateY(-1px);
+}
+
+.button-secondary {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+}
+
+.top-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.content-title {
+  margin-bottom: 1.4rem;
+}
+
+.timeline {
+  list-style: none;
+  border-left: 2px solid var(--border);
+  margin-left: 0.5rem;
+  padding-left: 1.2rem;
+}
+
+.timeline li {
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: var(--surface-alt);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.date {
+  font-weight: 600;
+  color: var(--text-soft);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.pdf-frame {
+  width: 100%;
+  min-height: 72vh;
+  border: none;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
