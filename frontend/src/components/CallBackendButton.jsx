@@ -7,7 +7,7 @@ function CallBackendButton() {
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      const result = await fetch("/api/hello");
+      const result = await fetch("https://backend-production-rossello.up.railway.app:8080/api/hello");
       if (!result.ok) {
         throw new Error("Request failed");
       }
@@ -24,7 +24,7 @@ function CallBackendButton() {
   return (
     <div className="backend-call">
       <button className="button" onClick={handleClick} type="button" disabled={isLoading}>
-        {isLoading ? "Calling..." : "call backend"}
+        {isLoading ? "Calling..." : "Call Backend"}
       </button>
       {response && <p className="backend-response">{response}</p>}
     </div>
