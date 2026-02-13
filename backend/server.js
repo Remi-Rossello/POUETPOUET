@@ -36,7 +36,8 @@ app.use(
 );
 
 function helloFromBackend() {
-  return 'hello from the backend';
+  const currentDate = new Date().toISOString().split('T')[0];
+  return `Backend here, the current date is ${currentDate}`;
 }
 
 app.get('/', (req, res) => {
