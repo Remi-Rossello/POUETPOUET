@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { BlockMath, InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
@@ -349,6 +349,88 @@ function LagrangianPanel() {
   const currentNode = equationTree[currentNodeId];
   const canGoBack = navigationStack.length > 1;
 
+  const treePaths = useMemo(() => {
+    const paths = { root: ["root"] };
+
+    const walk = (nodeId, path, visited = new Set()) => {
+      if (visited.has(nodeId) || !equationTree[nodeId]) {
+        return;
+      }
+
+      const nextVisited = new Set(visited);
+      nextVisited.add(nodeId);
+
+      const node = equationTree[nodeId];
+      const childNodeIds = [
+        ...new Set((node.terms || []).map((term) => term.next).filter((nextId) => nextId && equationTree[nextId])),
+      ];
+
+      childNodeIds.forEach((childNodeId) => {
+        if (!paths[childNodeId]) {
+          paths[childNodeId] = [...path, childNodeId];
+        }
+        walk(childNodeId, paths[childNodeId], nextVisited);
+      });
+    };
+
+    walk("root", ["root"]);
+    return paths;
+  }, []);
+
+  const jumpToNode = (targetNodeId) => {
+    const targetPath = treePaths[targetNodeId];
+    if (!targetPath) {
+      return;
+    }
+    setNavigationStack(targetPath);
+  };
+
+  const getCompactNodeLabel = (node) => {
+    const sourceLabel = node.treeLabel || node.title || "";
+    const tokens = sourceLabel.trim().split(/\s+/).filter(Boolean);
+    if (tokens.length <= 2) {
+      return sourceLabel;
+    }
+    return `${tokens[0]} ${tokens[1]}`;
+  };
+
+  const renderTreeNode = (nodeId, visited = new Set()) => {
+    if (visited.has(nodeId) || !equationTree[nodeId]) {
+      return null;
+    }
+
+    const nextVisited = new Set(visited);
+    nextVisited.add(nodeId);
+
+    const node = equationTree[nodeId];
+    const childNodeIds = [
+      ...new Set((node.terms || []).map((term) => term.next).filter((nextId) => nextId && equationTree[nextId])),
+    ];
+
+    return (
+      <li
+        key={nodeId}
+        className={`equation-tree-node ${node.className || ""} ${nodeId === currentNodeId ? "is-current" : ""} ${
+          childNodeIds.length > 0 ? "has-children" : ""
+        }`}
+      >
+        <button
+          className="equation-tree-node-label"
+          type="button"
+          onClick={() => jumpToNode(nodeId)}
+          title={node.title}
+        >
+          {getCompactNodeLabel(node)}
+        </button>
+        {childNodeIds.length > 0 && (
+          <ul className="equation-tree-children">
+            {childNodeIds.map((childNodeId) => renderTreeNode(childNodeId, nextVisited))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
   const enterNode = (nextNodeId) => {
     if (!nextNodeId || !equationTree[nextNodeId]) {
       return;
@@ -393,7 +475,7 @@ function LagrangianPanel() {
       initial="hidden"
       animate="visible"
     >
-      <p className="eyebrow">Physics</p>
+      <p className="eyebrow">Demo</p>
       <h1 className="content-title">Standard model lagrangian explorer</h1>
 
       <motion.div className="lagrangian-intro" variants={itemVariants}>
@@ -435,10 +517,11 @@ function LagrangianPanel() {
         </div>
 
         <motion.div
+          key={`draw-${currentNode.id}`}
           className="equation-draw-line"
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          transition={{ duration: 2.0, ease: "linear", delay: 0 }}
         />
 
         <motion.div
@@ -446,7 +529,7 @@ function LagrangianPanel() {
           key={currentNode.id}
           initial={{ opacity: 0, clipPath: "inset(0 100% 0 0)", y: 8 }}
           animate={{ opacity: 1, clipPath: "inset(0 0% 0 0)", y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 2.0, ease: "linear", delay: 0 }}
         >
           {currentNode.prefix && currentNode.terms ? (
             <div className="equation-row">
@@ -479,7 +562,7 @@ function LagrangianPanel() {
               className="term-expanded-math"
               initial={{ opacity: 0, clipPath: "inset(0 100% 0 0)" }}
               animate={{ opacity: 1, clipPath: "inset(0 0% 0 0)" }}
-              transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+              transition={{ duration: 2.0, ease: "linear", delay: 0 }}
             >
               <p className="equation-explanation-text">
                 {currentNode.explanation || "This box gives a short explanation of the selected term."}
@@ -487,6 +570,13 @@ function LagrangianPanel() {
             </motion.div>
           )}
         </motion.div>
+      </motion.div>
+
+      <motion.div className="equation-tree-box" variants={itemVariants}>
+        <p className="equation-tree-title">Equation tree</p>
+        <div className="equation-tree-scroll">
+          <ul className="equation-tree-root">{renderTreeNode("root")}</ul>
+        </div>
       </motion.div>
     </motion.section>
   );

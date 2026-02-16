@@ -28,18 +28,25 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
               label={tab.label}
               isActive={activeTab === tab.id}
               onClick={() => onTabChange(tab.id)}
+              className={tab.id === "certifications" || tab.id === "projects" ? "tab-button-fixed-white" : ""}
             />
           ))}
         </nav>
 
         <div className="header-actions">
-          <button className="theme-toggle" onClick={toggleTheme} type="button" aria-label="Toggle theme">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            type="button"
+            aria-label="Toggle theme"
+            data-tooltip="toggle light/dark"
+          >
             {theme === "dark" ? "☀" : "☾"}
           </button>
-          <a className="social-link" href="https://github.com" target="_blank" rel="noreferrer">
+          <a className="social-link" href="https://github.com/Remi-Rossello" target="_blank" rel="noreferrer">
             GitHub
           </a>
-          <a className="social-link" href="https://linkedin.com" target="_blank" rel="noreferrer">
+          <a className="social-link" href="https://www.linkedin.com/in/remi-rossello/" target="_blank" rel="noreferrer">
             LinkedIn
           </a>
           <a className="social-link" href="https://x.com" target="_blank" rel="noreferrer">

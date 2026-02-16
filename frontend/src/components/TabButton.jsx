@@ -1,6 +1,6 @@
-function TabButton({ label, isActive, onClick }) {
+function TabButton({ label, isActive, onClick, className = "" }) {
   return (
-    <button className={`tab-button ${isActive ? "is-active" : ""}`} onClick={onClick} type="button">
+    <button className={`tab-button ${isActive ? "is-active" : ""} ${className}`.trim()} onClick={onClick} type="button">
       {label}
     </button>
   );
