@@ -17,7 +17,7 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
     <header className="tabs-shell">
       <div className="tabs-header">
         <div className="header-brand" aria-label="Brand">
-          <img className="brand-mark" src="/favicon.ico" alt="Moomin" />
+          <img className="brand-mark" src="/assets/images/moomin.png" alt="Moomin" />
           <span className="brand-name">Rémi Rossello</span>
         </div>
 
