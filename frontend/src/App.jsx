@@ -228,11 +228,11 @@ function App() {
               <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
             </div>
             <section className="about-story" aria-label="About introduction">
-              <h2 className="about-story-title">About me</h2>
+              <h2 className="about-story-title">Hi.</h2>
               <p className="about-story-text">
                 My name is Rémi Rossello, I come from Vence, a small but beautiful town in the French Riviera. Growing
-                up, I quickly became deeply curious about the nature and workings of our universe and our place within
-                it. Over time, technology and then computer science became strong interests.
+                up, I wanted to know exactly why we are here and how the universe works. When I found out it was too
+                hard, I began learning computer science instead ;) This website is part of the result.
               </p>
 
               <h2 className="about-story-title">Experiences</h2>

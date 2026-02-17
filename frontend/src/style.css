@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Uncial+Antiqua&display=swap");
+
 :root {
   --bg: #05070b;
   --bg-overlay: rgba(2, 6, 12, 0.22);
@@ -78,7 +80,7 @@ body {
   gap: 0.55rem;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.5rem max(0.75rem, 4vw);
+  padding: 0.5rem max(0.35rem, 1vw);
   border-radius: 0;
   background: rgba(7, 12, 19, 0.82);
   border: 1px solid var(--border);
@@ -103,11 +105,22 @@ body {
 }
 
 .brand-name {
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
+  font-family: "Cinzel Decorative", "Uncial Antiqua", "Times New Roman", serif;
+  font-size: 0.98rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-weight: 400;
   color: #f5f7fa;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.brand-name::before,
+.brand-name::after {
+  content: "❦";
+  font-size: 0.72em;
+  opacity: 0.82;
 }
 
 .header-nav {
@@ -124,6 +137,7 @@ body {
   gap: 0.35rem;
   justify-content: flex-end;
   margin-left: auto;
+  position: relative;
 }
 
 .tab-button {
@@ -222,6 +236,51 @@ body {
   color: #f5f7fa;
   border-color: var(--border);
   background: rgba(20, 30, 45, 0.45);
+}
+
+.contact-toggle {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.contact-card {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.72rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  z-index: 30;
+}
+
+.contact-card-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.contact-card-line {
+  color: var(--text-main);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.contact-card-link {
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.84rem;
+}
+
+.contact-card-link:hover {
+  color: var(--text-main);
 }
 
 .page-content {
@@ -480,8 +539,8 @@ h1 {
 }
 
 .about-profile-pic {
-  width: 188px;
-  height: 188px;
+  width: 228px;
+  height: 228px;
   border-radius: 8px;
   border: 2px solid var(--border-strong);
   object-fit: cover;
@@ -719,13 +778,14 @@ h1 {
   justify-content: center;
   margin: 0;
   font-size: 1.05rem;
+  line-height: 1;
   letter-spacing: 0;
   text-transform: none;
 }
 
 .projects-sidebar-toggle-floating {
   position: fixed;
-  top: 3rem;
+  top: 3.6rem;
   left: 0;
   z-index: 21;
   border-radius: 0;
@@ -741,7 +801,7 @@ h1 {
 .projects-layout-edge {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  min-height: calc(100vh - 3rem);
+  min-height: calc(100vh - 3.6rem);
   padding-left: 0;
   padding-right: max(0.75rem, 2vw);
 }
@@ -754,10 +814,10 @@ h1 {
   width: 220px;
   min-width: 220px;
   position: fixed;
-  top: 3rem;
+  top: 3.6rem;
   left: 0;
   align-self: stretch;
-  min-height: calc(100vh - 3rem);
+  min-height: calc(100vh - 3.6rem);
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -1835,8 +1895,8 @@ h1 {
   }
 
   .about-profile-pic {
-    width: 144px;
-    height: 144px;
+    width: 172px;
+    height: 172px;
   }
 
   .projects-sidebar {
