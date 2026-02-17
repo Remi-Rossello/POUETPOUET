@@ -344,6 +344,7 @@ const drawVariants = {
 function LagrangianPanel() {
   const [navigationStack, setNavigationStack] = useState(["root"]);
   const [isEquationFullscreen, setIsEquationFullscreen] = useState(false);
+  const [isLagrangianMoreOpen, setIsLagrangianMoreOpen] = useState(false);
   const equationBoxRef = useRef(null);
   const currentNodeId = navigationStack[navigationStack.length - 1];
   const currentNode = equationTree[currentNodeId];
@@ -475,17 +476,70 @@ function LagrangianPanel() {
       initial="hidden"
       animate="visible"
     >
-      <p className="eyebrow">Demo</p>
       <h1 className="content-title">Standard model lagrangian explorer</h1>
 
       <motion.div className="lagrangian-intro" variants={itemVariants}>
         <p className="lagrangian-blogpost">
-          At every point in spacetime, the Universe selects dynamics by extremizing a local quantity: the Lagrangian
-          density, <InlineMath math={String.raw`\mathcal{L}`} />. In practice, no single force acts alone; the gauge,
-          matter, Higgs, and Yukawa contributions evolve together. The action
-          <InlineMath math={String.raw`S=\int \mathcal{L}\,d^4x`} /> follows a stationary principle, which yields the
-          equations of motion observed in physics.
+          Welcome to the Lagrangian explorer Demo ! Interact with the most fundamental quantity of all current particle
+          physics: the complete Standard Model Lagrangian density. Click the terms to expand them and understand how
+          quantum fields for matter and force particles interact and evolve.
         </p>
+        <button
+          className="button button-secondary lagrangian-show-more-toggle"
+          type="button"
+          onClick={() => setIsLagrangianMoreOpen((open) => !open)}
+        >
+          {isLagrangianMoreOpen ? "Show less" : "Show more"}
+        </button>
+        {isLagrangianMoreOpen && (
+          <div className="lagrangian-show-more-text">
+            <h3 className="lagrangian-show-more-title">Optimizing the Action</h3>
+            <p className="lagrangian-show-more-paragraph">
+              The classical Lagrangian of a system is defined as the kinetic energy, minus the potential energy.
+              Integrating this Lagrangian over the path of an object, with fixed initial and final conditions, gives
+              the action S. The actual path that the object will take is the one that makes the action "stationnary",
+              meaning a small change of path almost doesn't change the resulting action. In practice, this often means
+              minimizing the action.
+            </p>
+            <p className="lagrangian-show-more-paragraph">
+              Ignore the potential energy for a moment. Minimizing the integral of the kinetic energy is a way of
+              saying "The real path taken from point A to point B is the one that goes in the straightest line, with
+              the least changes in speed". This makes sense intuitively: why would an object randomly take a crazy
+              trajectory, going very far, very fast, just to get back to point B in time ? It often just takes a straight line, the one with the least
+              possible action that is still needed to get from A to B.
+            </p>
+            <p className="lagrangian-show-more-paragraph">
+              The negative potential energy term can be viewed as having the opposite effect: where there is more
+              potential energy, the action decreases. This means that trajectories will tend to "bend" towards high
+              potentials on the journey from A to B in order to minimize the action. Think of launching a ball in the
+              air to your friend: to get to your friend, the trajectory can't be a straight line, it has to bend towards
+              the sky, with higher potential energy. This is a way of saying that trajectories have to "fight" against the potential to get to the intended target.
+            </p>
+            <p className="lagrangian-show-more-paragraph">
+              Finally, it can be shown that getting a stationnary action is the same as satisfying the Euler-Lagrange
+              equation, which in turn is the same as satisfying the usual Newtonian equations of motion.
+            </p>
+            <h3 className="lagrangian-show-more-title">What about quantum fields ?</h3>
+            <p className="lagrangian-show-more-paragraph">
+              In quantum field theory, at each point in space, you can think of the field strength as tiny springs,
+              with their own speed, recall forces, and interactions with the other fields. From that, a "Lagrangian
+              density" can be defined as the "tiny quantum version of the Lagrangian at each point in space", with units
+              of Energy units per Volume units.
+            </p>
+            <p className="lagrangian-show-more-paragraph">
+              Thus, all motion, behavior, and interactions of all particles in flat spacetime can ultimately be described by
+              adding up and integrating over all space-time the individual Lagrangians densities of each field !
+              This is what the Standard Model Lagrangian density is all about !
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      <motion.div className="equation-tree-box" variants={itemVariants}>
+        <p className="equation-tree-title">Equation tree</p>
+        <div className="equation-tree-scroll">
+          <ul className="equation-tree-root">{renderTreeNode("root")}</ul>
+        </div>
       </motion.div>
 
       <motion.div className="lagrangian-equation" variants={itemVariants} ref={equationBoxRef}>
@@ -570,13 +624,6 @@ function LagrangianPanel() {
             </motion.div>
           )}
         </motion.div>
-      </motion.div>
-
-      <motion.div className="equation-tree-box" variants={itemVariants}>
-        <p className="equation-tree-title">Equation tree</p>
-        <div className="equation-tree-scroll">
-          <ul className="equation-tree-root">{renderTreeNode("root")}</ul>
-        </div>
       </motion.div>
     </motion.section>
   );

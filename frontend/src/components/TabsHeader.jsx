@@ -28,7 +28,6 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
               label={tab.label}
               isActive={activeTab === tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={tab.id === "certifications" || tab.id === "projects" ? "tab-button-fixed-white" : ""}
             />
           ))}
         </nav>
@@ -48,9 +47,6 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
           </a>
           <a className="social-link" href="https://www.linkedin.com/in/remi-rossello/" target="_blank" rel="noreferrer">
             LinkedIn
-          </a>
-          <a className="social-link" href="https://x.com" target="_blank" rel="noreferrer">
-            X
           </a>
         </div>
       </div>

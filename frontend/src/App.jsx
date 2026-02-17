@@ -1,5 +1,8 @@
 import { Suspense, lazy, useState } from "react";
+import { InlineMath } from "react-katex";
+import "katex/dist/katex.min.css";
 import CallBackendButton from "./components/CallBackendButton";
+import PublicationPanel from "./components/PublicationPanel";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./components/LagrangianPanel"));
@@ -165,6 +168,11 @@ function App() {
   const selectedAboutCv = aboutCvOptions.find((option) => option.id === aboutTrack) || aboutCvOptions[0];
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
+  const openProjectTab = (projectId) => {
+    setActiveProject(projectId);
+    setIsProjectsPanelOpen(true);
+    setActiveTab("projects");
+  };
 
   return (
     <main className="page-shell">
@@ -173,24 +181,53 @@ function App() {
       <section className={`page-content ${activeTab === "home" ? "hero" : ""}`}>
         {activeTab === "home" && (
           <>
-            <p className="eyebrow">Personal Website</p>
-            <h1>Welcome</h1>
-            <p className="subtitle">Explore my profile and my journey in computer science.</p>
-            <div className="home-actions">
-              <CallBackendButton />
+            <h1 className="about-rainbow-title">Welcome to my website !</h1>
+            <div className="home-panels">
+              <section className="home-panel" aria-label="Latest news">
+                <h2 className="home-panel-title">Latest news</h2>
+                <button className="home-panel-card" type="button" onClick={() => openProjectTab("lagrangian")}>
+                  <span className="home-panel-card-title">Lagrangian explorer</span>
+                  <span className="home-panel-card-status">In progress</span>
+                  <span className="home-lagrangian-preview" aria-hidden="true">
+                    <InlineMath
+                      math={String.raw`\mathcal{L}_{SM}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+i\bar{\psi}\gamma^\mu D_\mu\psi-\left(y\bar{\psi}_L H\psi_R+h.c.\right)+|D_\mu H|^2-V(H)`}
+                    />
+                  </span>
+                  <span className="home-panel-card-link">Open in Projects →</span>
+                </button>
+              </section>
+
+              <section className="home-panel" aria-label="Comming soon">
+                <h2 className="home-panel-title">Comming soon</h2>
+                <div className="home-panel-list">
+                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("computer-roadmap")}>
+                    <span className="home-panel-card-title">The ultimate computer roadmap</span>
+                    <span className="home-panel-card-status">Planned</span>
+                    <span className="home-panel-card-link">Open in Projects →</span>
+                  </button>
+                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("backend-test")}>
+                    <span className="home-panel-card-title">Backend test - demo</span>
+                    <span className="home-panel-card-status">Upcoming</span>
+                    <span className="home-panel-card-link">Open in Projects →</span>
+                  </button>
+                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("field-catalog")}>
+                    <span className="home-panel-card-title">Field catalog</span>
+                    <span className="home-panel-card-status">Upcoming</span>
+                    <span className="home-panel-card-link">Open in Projects →</span>
+                  </button>
+                </div>
+              </section>
             </div>
           </>
         )}
 
         {activeTab === "about" && (
           <>
-            <h1 className="content-title about-rainbow-title">Welcome to my website !</h1>
+            <h1 className="content-title about-rainbow-title">About</h1>
             <div className="about-top-media">
               <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
             </div>
             <section className="about-story" aria-label="About introduction">
-              <p className="about-story-lead">WELCOME TO MY PERSONNAL WEBSITE !</p>
-
               <h2 className="about-story-title">About me</h2>
               <p className="about-story-text">
                 My name is Rémi Rossello, I come from Vence, a small but beautiful town in the French Riviera. Growing
@@ -206,7 +243,7 @@ function App() {
                 concentrating on the mining of space ressources, specifically Lunar water. There, I made use of both
                 materials science and programming skills for ESA-sponsored experiments. 
                 Then, I briefly joined the Cosmochemistry and Planetology team at the Petrological and Geochemical
-                Research Center (CRPG) in Nancy, France, again as in intern. With my tutor Jessica Flahaut and CNES
+                Research Center (CRPG) in Nancy, France, again as in intern. With my tutor Jessica Flahaut and <abbr title="French national space agency">CNES</abbr>
                 engineer Nicolas Théret, we co-authored a scientific proceeding on the spectral identification of Lunar
                 minerals thanks to scripts I had written in IDL. 
                 Both experiences where related to planned rover missions on the Moon, but OffWorld's mission was
@@ -269,20 +306,24 @@ function App() {
 
         {activeTab === "projects" && (
           <>
-            <h1 className="content-title content-title-fixed-white">Projects</h1>
-            <button
-              className="button button-secondary projects-sidebar-toggle"
-              type="button"
-              onClick={() => setIsProjectsPanelOpen((isOpen) => !isOpen)}
-            >
-              {isProjectsPanelOpen ? "Hide panel" : "Open panel"}
-            </button>
+            <div className={`projects-layout projects-layout-edge ${!isProjectsPanelOpen ? "is-panel-hidden" : ""}`.trim()}>
+              <button
+                className="button button-secondary projects-sidebar-toggle projects-sidebar-toggle-floating"
+                type="button"
+                onClick={() => setIsProjectsPanelOpen((isOpen) => !isOpen)}
+                aria-label={isProjectsPanelOpen ? "Hide project panel" : "Show project panel"}
+              >
+                ☰
+              </button>
 
-            <div className="projects-layout">
               {isProjectsPanelOpen && (
                 <aside className="projects-sidebar" aria-label="Projects sidebar">
+                  <p className="projects-sidebar-heading">Interactive</p>
                   <button className="button project-entry-button" type="button" onClick={() => setActiveProject("lagrangian")}>
                     Lagrangian explorer
+                  </button>
+                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("backend-test")}>
+                    Backend test - demo
                   </button>
                   <button className="button project-entry-button" type="button" onClick={() => setActiveProject("field-catalog")}>
                     Field catalog · Upcoming
@@ -290,15 +331,30 @@ function App() {
                   <button className="button project-entry-button" type="button" onClick={() => setActiveProject("computer-roadmap")}>
                     The ultimate computer roadmap · Upcoming
                   </button>
+
+                  <p className="projects-sidebar-heading projects-sidebar-heading-separator">Publications</p>
+                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-lunar-geology")}>
+                    Lunar geology
+                  </button>
+                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-spintronics")}>
+                    Spintronics
+                  </button>
+                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-spectroscopy")}>
+                    Spectroscopy
+                  </button>
                 </aside>
               )}
 
               <div className="projects-content">
+                {!activeProject && <p className="lagrangian-loading">Choose a project from the left panel.</p>}
+
                 {activeProject === "lagrangian" && (
                   <Suspense fallback={<p className="lagrangian-loading">Loading equation...</p>}>
                     <LagrangianPanel />
                   </Suspense>
                 )}
+
+                {activeProject === "backend-test" && <CallBackendButton />}
 
                 {activeProject === "field-catalog" && (
                   <p className="lagrangian-loading">Upcoming</p>
@@ -307,6 +363,34 @@ function App() {
                 {activeProject === "computer-roadmap" && (
                   <p className="lagrangian-loading">Upcoming</p>
                 )}
+
+                {activeProject === "publication-spintronics" && (
+                  <PublicationPanel
+                    key="publication-spintronics"
+                    title="Spintronics"
+                    summary="Friendly introduction to the Dzyaloshinkii-Moriya effect, magnetic skyrmions, and potential applications in spintronics. Written in French with co-author Alexandra Lepage."
+                    pdfUrl="/assets/docs/Alexandra_lepage_remi_rossello_DMI.pdf"
+                  />
+                )}
+
+                {activeProject === "publication-spectroscopy" && (
+                  <PublicationPanel
+                    key="publication-spectroscopy"
+                    title="Spectroscopy"
+                    summary="General overview of two common optical spectroscopy techniques: Raman spectroscopy, and Fourier-transform infrared spectroscopy (FTIR)."
+                    pdfUrl="/assets/docs/Raman_vs_FTIR_Remi_Rossello.pdf"
+                  />
+                )}
+
+                {activeProject === "publication-lunar-geology" && (
+                  <PublicationPanel
+                    key="publication-lunar-geology"
+                    title="Lunar geology"
+                    summary="In this scientific proceeding published at the European Lunar Symposium 2025 in Munster, Germany, planetary geologist Jessica Flahaut uses my IDL lunar multispectral camera simulation, and automatic mineral classification scripts, to see if useful insights could be extracted with these techniques, and the future CNES lunar rover using them."
+                    sourceUrl="https://zenodo.org/records/15470779"
+                    pdfUrl="/assets/docs/ELS_Flahautv3.pdf"
+                  />
+                )}
               </div>
             </div>
           </>
@@ -314,7 +398,7 @@ function App() {
 
         {activeTab === "certifications" && (
           <>
-            <h1 className="content-title content-title-fixed-white">Credentials</h1>
+            <h1 className="content-title">Credentials</h1>
 
             {selectedCertification ? (
               <div className="certification-viewer">
