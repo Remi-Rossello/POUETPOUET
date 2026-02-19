@@ -1,18 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TabButton from "./TabButton";
 
+/**
+ * Renders the navigation header with tabs, theme switch, and contact panel.
+ * @param {object} props Component props.
+ * @param {{id: string, label: string}[]} props.tabs Tab list.
+ * @param {string} props.activeTab Active tab identifier.
+ * @param {(tabId: string) => void} props.onTabChange Tab change callback.
+ * @returns {JSX.Element} Tabs header.
+ */
 function TabsHeader({ tabs, activeTab, onTabChange }) {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const contactPanelRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  /**
+    * Toggles between light and dark themes.
+   * @returns {void}
+   */
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
+
+  useEffect(() => {
+    if (!isContactOpen) {
+      return;
+    }
+
+    /**
+      * Closes the contact panel when Escape is pressed.
+      * @param {KeyboardEvent} event Global keyboard event.
+     * @returns {void}
+     */
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsContactOpen(false);
+      }
+    };
+
+    /**
+      * Closes the contact panel when clicking outside.
+      * @param {MouseEvent} event Global mouse event.
+     * @returns {void}
+     */
+    const handleOutsideClick = (event) => {
+      if (contactPanelRef.current && !contactPanelRef.current.contains(event.target)) {
+        setIsContactOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isContactOpen]);
 
   return (
     <header className="tabs-shell">
@@ -55,15 +104,20 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
             onClick={() => setIsContactOpen((open) => !open)}
             aria-expanded={isContactOpen}
             aria-controls="header-contact-card"
+            aria-haspopup="dialog"
           >
             Contact
           </button>
 
           {isContactOpen && (
-            <div id="header-contact-card" className="contact-card" role="dialog" aria-label="Contact details">
+            <div id="header-contact-card" className="contact-card" role="dialog" aria-label="Contact details" ref={contactPanelRef}>
               <img className="contact-card-avatar" src="/assets/images/profile-pic.png" alt="Rémi Rossello" />
-              <p className="contact-card-line">remi.rossello@gmail.com</p>
-              <p className="contact-card-line">+33 07 81 00 50 32</p>
+              <a className="contact-card-link" href="mailto:remi.rossello@gmail.com">
+                remi.rossello@gmail.com
+              </a>
+              <a className="contact-card-link" href="tel:+33781005032">
+                +33 07 81 00 50 32
+              </a>
             </div>
           )}
         </div>

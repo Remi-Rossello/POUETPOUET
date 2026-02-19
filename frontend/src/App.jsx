@@ -8,29 +8,6 @@ import TabsHeader from "./components/TabsHeader";
 const LagrangianPanel = lazy(() => import("./components/LagrangianPanel"));
 const linkedInCertificationsUrl = "https://www.linkedin.com/in/remi-rossello/details/certifications/";
 
-const journeyItems = [
-  {
-    year: "2025",
-    title: "Systems & Networks",
-    description: "Started building complete web deployments and server workflows.",
-  },
-  {
-    year: "2024",
-    title: "Backend Foundations",
-    description: "Learned API routing, server structure, and deployment basics.",
-  },
-  {
-    year: "2023",
-    title: "Web Development",
-    description: "Developed first static websites with HTML and CSS organization.",
-  },
-  {
-    year: "2022",
-    title: "First Steps",
-    description: "Discovered programming and began exploring how computers work.",
-  },
-];
-
 const certificationItems = [
   {
     section: "Engineering",
@@ -148,6 +125,10 @@ const aboutCvOptions = [
   },
 ];
 
+/**
+ * Root frontend component with tab-based navigation.
+ * @returns {JSX.Element} Main application layout.
+ */
 function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [activeProject, setActiveProject] = useState(null);
@@ -168,6 +149,12 @@ function App() {
   const selectedAboutCv = aboutCvOptions.find((option) => option.id === aboutTrack) || aboutCvOptions[0];
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
+
+  /**
+    * Opens the Projects tab and selects a specific project.
+    * @param {string} projectId Project identifier to display.
+   * @returns {void}
+   */
   const openProjectTab = (projectId) => {
     setActiveProject(projectId);
     setIsProjectsPanelOpen(true);
@@ -188,7 +175,7 @@ function App() {
                 <button className="home-panel-card" type="button" onClick={() => openProjectTab("lagrangian")}>
                   <span className="home-panel-card-title">Lagrangian explorer</span>
                   <span className="home-panel-card-status">In progress</span>
-                  <span className="home-lagrangian-preview" aria-hidden="true">
+                  <span className="home-panel-preview-math" aria-hidden="true">
                     <InlineMath
                       math={String.raw`\mathcal{L}_{SM}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+i\bar{\psi}\gamma^\mu D_\mu\psi-\left(y\bar{\psi}_L H\psi_R+h.c.\right)+|D_\mu H|^2-V(H)`}
                     />
@@ -346,10 +333,10 @@ function App() {
               )}
 
               <div className="projects-content">
-                {!activeProject && <p className="lagrangian-loading">Choose a project from the left panel.</p>}
+                {!activeProject && <p className="project-loading">Choose a project from the left panel.</p>}
 
                 {activeProject === "lagrangian" && (
-                  <Suspense fallback={<p className="lagrangian-loading">Loading equation...</p>}>
+                  <Suspense fallback={<p className="project-loading">Loading equation...</p>}>
                     <LagrangianPanel />
                   </Suspense>
                 )}
@@ -357,11 +344,11 @@ function App() {
                 {activeProject === "backend-test" && <CallBackendButton />}
 
                 {activeProject === "field-catalog" && (
-                  <p className="lagrangian-loading">Upcoming</p>
+                  <p className="project-loading">Upcoming</p>
                 )}
 
                 {activeProject === "computer-roadmap" && (
-                  <p className="lagrangian-loading">Upcoming</p>
+                  <p className="project-loading">Upcoming</p>
                 )}
 
                 {activeProject === "publication-spintronics" && (

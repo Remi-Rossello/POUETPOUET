@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Uncial+Antiqua&display=swap");
 
+/* === THEME AND VARIABLES === */
 :root {
   --bg: #05070b;
   --bg-overlay: rgba(2, 6, 12, 0.22);
@@ -32,6 +33,7 @@
   --text-shadow-soft: 0 1px 1px rgba(255, 255, 255, 0.62);
 }
 
+/* === RESET GLOBAL === */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -59,12 +61,14 @@ body {
   min-height: 100vh;
 }
 
+/* === GLOBAL LAYOUT === */
 .page-shell {
   width: min(1320px, 96%);
   margin: 0 auto;
   padding: 6rem 0 3.2rem;
 }
 
+/* === HEADER AND NAVIGATION === */
 .tabs-shell {
   margin-bottom: 0;
   position: fixed;
@@ -283,6 +287,7 @@ body {
   color: var(--text-main);
 }
 
+/* === CONTENU COMMUN === */
 .page-content {
   padding: 0.2rem 0.2rem 0;
 }
@@ -291,6 +296,7 @@ body {
   text-align: center;
 }
 
+/* === SECTION HOME === */
 .home-panels {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -351,7 +357,7 @@ body {
   font-size: 0.92rem;
 }
 
-.home-lagrangian-preview {
+.home-panel-preview-math {
   margin-top: 0.12rem;
   padding: 0.36rem 0.48rem;
   border: 1px solid var(--border);
@@ -360,12 +366,12 @@ body {
   overflow: hidden;
 }
 
-.home-lagrangian-preview .katex {
+.home-panel-preview-math .katex {
   font-size: 0.9em;
 }
 
-.home-lagrangian-preview .katex,
-.home-lagrangian-preview .katex * {
+.home-panel-preview-math .katex,
+.home-panel-preview-math .katex * {
   color: transparent !important;
   background-image: linear-gradient(
     90deg,
@@ -383,8 +389,8 @@ body {
   animation: rainbow-shift 6s linear infinite;
 }
 
-:root[data-theme="light"] .home-lagrangian-preview .katex,
-:root[data-theme="light"] .home-lagrangian-preview .katex * {
+:root[data-theme="light"] .home-panel-preview-math .katex,
+:root[data-theme="light"] .home-panel-preview-math .katex * {
   color: var(--primary) !important;
   background-image: none;
   -webkit-background-clip: border-box;
@@ -425,6 +431,7 @@ h1 {
   text-shadow: var(--text-shadow-soft);
 }
 
+/* === SECTION ABOUT === */
 .about-subtitle {
   max-width: 920px;
   margin: 0 0 0.7rem;
@@ -768,6 +775,7 @@ h1 {
   flex-wrap: wrap;
 }
 
+/* === SECTION PROJECTS === */
 .projects-sidebar-toggle {
   width: 40px;
   min-width: 40px;
@@ -879,6 +887,7 @@ h1 {
   margin-left: 220px;
 }
 
+/* === SECTION CREDENTIALS === */
 .certifications-empty {
   margin: 0;
   max-width: 100%;
@@ -1021,6 +1030,7 @@ h1 {
   background: var(--surface-alt);
 }
 
+/* === BACKEND DEMO === */
 .backend-call {
   display: flex;
   flex-direction: column;
@@ -1034,6 +1044,7 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+/* === GENERIC BUTTONS === */
 .button {
   display: inline-block;
   padding: 0.78rem 1.2rem;
@@ -1153,17 +1164,18 @@ h1 {
   background: #ffffff;
 }
 
-.lagrangian-panel {
+/* === SECTION LAGRANGIAN === */
+.project-panel {
   text-align: left;
 }
 
-.lagrangian-loading {
+.project-loading {
   color: var(--text-soft-strong);
   font-size: 0.95rem;
   text-shadow: var(--text-shadow-soft);
 }
 
-.lagrangian-intro {
+.project-intro {
   margin-bottom: 0.85rem;
   padding: 0.95rem 1rem;
   border: 1px solid var(--border);
@@ -1174,7 +1186,7 @@ h1 {
   text-shadow: var(--text-shadow-soft);
 }
 
-.lagrangian-blogpost {
+.project-body-text {
   line-height: 1.65;
   color: var(--text-soft-strong);
   max-width: 100%;
@@ -1182,11 +1194,11 @@ h1 {
   text-shadow: var(--text-shadow-soft);
 }
 
-.lagrangian-show-more-toggle {
+.project-show-more-toggle {
   margin-top: 0.7rem;
 }
 
-.lagrangian-show-more-text {
+.project-show-more-text {
   margin-top: 0.75rem;
   color: var(--text-soft-strong);
   font-size: 1rem;
@@ -1195,21 +1207,22 @@ h1 {
   text-shadow: var(--text-shadow-soft);
 }
 
-.lagrangian-show-more-title {
+.project-show-more-title {
   font-size: 1rem;
   line-height: 1.35;
   margin: 0.72rem 0 0.38rem;
   color: var(--text-main);
 }
 
-.lagrangian-show-more-paragraph {
+.project-show-more-paragraph {
   margin: 0 0 0.62rem;
 }
 
-.lagrangian-show-more-paragraph:last-child {
+.project-show-more-paragraph:last-child {
   margin-bottom: 0;
 }
 
+/* === SECTION PUBLICATIONS === */
 .publication-panel .content-title {
   margin-bottom: 0.9rem;
 }
@@ -1291,12 +1304,12 @@ h1 {
   border-radius: 6px;
 }
 
-.lagrangian-intro .katex {
+.project-intro .katex {
   font-size: 1.08em;
   color: #d7e8ff;
 }
 
-.lagrangian-equation {
+.project-content {
   position: relative;
   margin: 0 0 1.4rem;
   padding: 1.15rem 1.2rem;
@@ -1311,7 +1324,7 @@ h1 {
   box-shadow: inset 0 1px 0 rgba(183, 216, 255, 0.12);
 }
 
-.equation-fullscreen-button {
+.project-fullscreen-button {
   position: absolute;
   top: 0.42rem;
   right: 0.65rem;
@@ -1329,17 +1342,17 @@ h1 {
   transition: background 0.16s ease, border-color 0.16s ease;
 }
 
-.equation-fullscreen-button:hover {
+.project-fullscreen-button:hover {
   background: rgba(27, 39, 58, 0.82);
   border-color: rgba(195, 214, 240, 0.5);
 }
 
-.lagrangian-equation .katex {
+.project-content .katex {
   color: #ffffff;
   font-size: 1.18em;
 }
 
-.equation-draw-line {
+.project-draw-line {
   height: 1px;
   width: 100%;
   margin-bottom: 0.8rem;
@@ -1347,7 +1360,7 @@ h1 {
   transform-origin: left center;
 }
 
-.equation-row {
+.project-expression-row {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -1356,7 +1369,7 @@ h1 {
   font-size: clamp(1.2rem, 2.9vw, 1.55rem);
 }
 
-.equation-nav-row {
+.project-nav-row {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -1366,7 +1379,7 @@ h1 {
   z-index: 3;
 }
 
-.equation-node-title {
+.project-node-title {
   color: var(--text-soft);
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -1374,7 +1387,7 @@ h1 {
   font-weight: 600;
 }
 
-.equation-level-badge {
+.project-level-badge {
   margin-left: auto;
   margin-right: 0.3rem;
   padding: 0.22rem 0.5rem;
@@ -1387,7 +1400,8 @@ h1 {
   background: rgba(16, 25, 38, 0.58);
 }
 
-.equation-tree-box {
+/* === PROJECT TREE === */
+.project-tree-box {
   margin-top: 0.55rem;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--border);
@@ -1395,7 +1409,7 @@ h1 {
   background: var(--surface-alt);
 }
 
-.equation-tree-title {
+.project-tree-title {
   color: var(--text-soft);
   font-size: 0.76rem;
   letter-spacing: 0.11em;
@@ -1403,25 +1417,25 @@ h1 {
   margin-bottom: 0.45rem;
 }
 
-.equation-tree-scroll {
+.project-tree-scroll {
   max-height: 300px;
   overflow: auto;
   padding: 0.2rem 0.25rem 0.35rem;
 }
 
-.equation-tree-root,
-.equation-tree-children {
+.project-tree-root,
+.project-tree-children {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.equation-tree-root {
+.project-tree-root {
   display: inline-block;
   min-width: max-content;
 }
 
-.equation-tree-children {
+.project-tree-children {
   position: relative;
   margin-top: 0;
   padding-top: 0.62rem;
@@ -1430,7 +1444,7 @@ h1 {
   gap: 0.14rem;
 }
 
-.equation-tree-children::before {
+.project-tree-children::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1441,7 +1455,7 @@ h1 {
   border-left: 2px solid rgba(183, 204, 234, 0.48);
 }
 
-.equation-tree-node {
+.project-tree-node {
   margin: 0;
   padding: 0.62rem 0.08rem 0;
   display: flex;
@@ -1450,15 +1464,15 @@ h1 {
   position: relative;
 }
 
-.equation-tree-node::before,
-.equation-tree-node::after {
+.project-tree-node::before,
+.project-tree-node::after {
   content: "";
   position: absolute;
   top: 0;
   pointer-events: none;
 }
 
-.equation-tree-node::before {
+.project-tree-node::before {
   left: 50%;
   width: 2px;
   height: 0.62rem;
@@ -1466,38 +1480,38 @@ h1 {
   background: rgba(183, 204, 234, 0.48);
 }
 
-.equation-tree-node::after {
+.project-tree-node::after {
   left: 0;
   right: 0;
   border-top: 2px solid rgba(183, 204, 234, 0.48);
 }
 
-.equation-tree-node:only-child::after {
+.project-tree-node:only-child::after {
   display: none;
 }
 
-.equation-tree-node:first-child::after {
+.project-tree-node:first-child::after {
   left: 50%;
 }
 
-.equation-tree-node:last-child::after {
+.project-tree-node:last-child::after {
   right: 50%;
 }
 
-.equation-tree-root > .equation-tree-node::before,
-.equation-tree-root > .equation-tree-node::after {
+.project-tree-root > .project-tree-node::before,
+.project-tree-root > .project-tree-node::after {
   display: none;
 }
 
-.equation-tree-root > .equation-tree-node {
+.project-tree-root > .project-tree-node {
   padding-top: 0;
 }
 
-.equation-tree-root > .equation-tree-node > .equation-tree-children {
+.project-tree-root > .project-tree-node > .project-tree-children {
   margin-top: 0.62rem;
 }
 
-.equation-tree-root > .equation-tree-node > .equation-tree-children::before {
+.project-tree-root > .project-tree-node > .project-tree-children::before {
   content: "";
   position: absolute;
   top: -0.62rem;
@@ -1508,7 +1522,7 @@ h1 {
   border-left: 2px solid rgba(183, 204, 234, 0.48);
 }
 
-.equation-tree-node.has-children > .equation-tree-node-label::after {
+.project-tree-node.has-children > .project-tree-node-label::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -1519,7 +1533,7 @@ h1 {
   background: rgba(183, 204, 234, 0.48);
 }
 
-.equation-tree-node-label {
+.project-tree-node-label {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -1543,66 +1557,66 @@ h1 {
   transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
-.equation-tree-node-label:hover {
+.project-tree-node-label:hover {
   border-color: rgba(170, 205, 246, 0.42);
   background: rgba(31, 47, 70, 0.62);
   color: var(--text-main);
 }
 
-.equation-tree-node.is-current > .equation-tree-node-label {
+.project-tree-node.is-current > .project-tree-node-label {
   color: var(--text-main);
   border: 1px solid rgba(127, 183, 255, 0.62);
   background: rgba(127, 183, 255, 0.16);
   font-weight: 700;
 }
 
-.equation-tree-node.term-gauge > .equation-tree-node-label {
+.project-tree-node.category-pink > .project-tree-node-label {
   border-color: rgba(255, 138, 200, 0.38);
   color: #ffd4ea;
 }
 
-.equation-tree-node.term-fermion > .equation-tree-node-label,
-.equation-tree-node.term-fermion-gen1 > .equation-tree-node-label,
-.equation-tree-node.term-fermion-gen2 > .equation-tree-node-label,
-.equation-tree-node.term-fermion-gen3 > .equation-tree-node-label {
+.project-tree-node.category-blue > .project-tree-node-label,
+.project-tree-node.category-blue-gen1 > .project-tree-node-label,
+.project-tree-node.category-blue-gen2 > .project-tree-node-label,
+.project-tree-node.category-blue-gen3 > .project-tree-node-label {
   border-color: rgba(127, 183, 255, 0.38);
   color: #cfe7ff;
 }
 
-.equation-tree-node.term-higgs > .equation-tree-node-label {
+.project-tree-node.category-orange > .project-tree-node-label {
   border-color: rgba(255, 189, 131, 0.4);
   color: #ffe1c2;
 }
 
-.equation-tree-node.term-yukawa > .equation-tree-node-label {
+.project-tree-node.category-purple > .project-tree-node-label {
   border-color: rgba(216, 172, 255, 0.4);
   color: #edd5ff;
 }
 
-.equation-tree-node.is-current.term-gauge > .equation-tree-node-label {
+.project-tree-node.is-current.category-pink > .project-tree-node-label {
   border-color: rgba(255, 138, 200, 0.8);
   background: rgba(255, 138, 200, 0.2);
 }
 
-.equation-tree-node.is-current.term-fermion > .equation-tree-node-label,
-.equation-tree-node.is-current.term-fermion-gen1 > .equation-tree-node-label,
-.equation-tree-node.is-current.term-fermion-gen2 > .equation-tree-node-label,
-.equation-tree-node.is-current.term-fermion-gen3 > .equation-tree-node-label {
+.project-tree-node.is-current.category-blue > .project-tree-node-label,
+.project-tree-node.is-current.category-blue-gen1 > .project-tree-node-label,
+.project-tree-node.is-current.category-blue-gen2 > .project-tree-node-label,
+.project-tree-node.is-current.category-blue-gen3 > .project-tree-node-label {
   border-color: rgba(127, 183, 255, 0.82);
   background: rgba(127, 183, 255, 0.2);
 }
 
-.equation-tree-node.is-current.term-higgs > .equation-tree-node-label {
+.project-tree-node.is-current.category-orange > .project-tree-node-label {
   border-color: rgba(255, 189, 131, 0.82);
   background: rgba(255, 189, 131, 0.2);
 }
 
-.equation-tree-node.is-current.term-yukawa > .equation-tree-node-label {
+.project-tree-node.is-current.category-purple > .project-tree-node-label {
   border-color: rgba(216, 172, 255, 0.82);
   background: rgba(216, 172, 255, 0.2);
 }
 
-.equation-back-button {
+.project-back-button {
   border: 1px solid var(--border-strong);
   border-radius: 6px;
   background: rgba(16, 25, 38, 0.78);
@@ -1618,12 +1632,12 @@ h1 {
   transition: background 0.16s ease, border-color 0.16s ease;
 }
 
-.equation-back-button:hover {
+.project-back-button:hover {
   background: rgba(27, 39, 58, 0.82);
   border-color: rgba(195, 214, 240, 0.5);
 }
 
-.equation-piece {
+.project-expression-piece {
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
@@ -1633,17 +1647,17 @@ h1 {
   vertical-align: baseline;
 }
 
-.equation-static-term {
+.project-expression-static {
   margin-right: 0.15rem;
 }
 
-:root[data-theme="light"] .equation-static-term,
-:root[data-theme="light"] .equation-static-term .katex,
-:root[data-theme="light"] .equation-static-term .katex * {
+:root[data-theme="light"] .project-expression-static,
+:root[data-theme="light"] .project-expression-static .katex,
+:root[data-theme="light"] .project-expression-static .katex * {
   color: #000000 !important;
 }
 
-.equation-term-button {
+.project-expression-button {
   appearance: none;
   border: 1px solid transparent;
   background: transparent;
@@ -1657,48 +1671,48 @@ h1 {
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.equation-term-button:hover {
+.project-expression-button:hover {
   background: rgba(34, 51, 73, 0.38);
 }
 
-.equation-piece .katex {
+.project-expression-piece .katex {
   color: var(--eq-color, #ffffff) !important;
   font-size: 1em !important;
   line-height: 1;
 }
 
-.equation-piece .katex .base {
+.project-expression-piece .katex .base {
   line-height: 1;
 }
 
 
 
-.equation-stage {
+.project-expression-stage {
   overflow: hidden;
 }
 
-.equation-fullmath {
+.project-expression-full {
   padding-top: 0.15rem;
 }
 
-.equation-fullmath .katex {
+.project-expression-full .katex {
   font-size: 1.2em;
 }
 
-.equation-fullmath .katex-display,
-.term-expanded-math .katex-display {
+.project-expression-full .katex-display,
+.project-expanded-math .katex-display {
   text-align: left;
   margin-left: 0;
 }
 
-.equation-fullmath .katex-display > .katex,
-.term-expanded-math .katex-display > .katex {
+.project-expression-full .katex-display > .katex,
+.project-expanded-math .katex-display > .katex {
   text-align: left;
   margin-left: 0;
   margin-right: auto;
 }
 
-.term-expanded-math {
+.project-expanded-math {
   margin-top: 0.7rem;
   padding-top: 0.55rem;
   border-top: 1px dashed rgba(183, 204, 234, 0.24);
@@ -1707,125 +1721,126 @@ h1 {
   color: var(--text-soft);
 }
 
-.term-expanded-math .katex-display {
+.project-expanded-math .katex-display {
   margin: 0.42rem 0;
 }
 
-.term-expanded-math .katex {
+.project-expanded-math .katex {
   font-size: 1em;
   color: inherit !important;
 }
 
-.equation-explanation-text {
+.project-explanation-text {
   color: var(--text-soft);
   font-size: 1.08rem;
   line-height: 1.6;
 }
 
-.term-expanded-math .katex * {
+.project-expanded-math .katex * {
   color: inherit !important;
 }
 
-.equation-fullmath.term-gauge .katex,
-.term-expanded-math.term-gauge .katex {
+.project-expression-full.category-pink .katex,
+.project-expanded-math.category-pink .katex {
   color: #ff8ac8 !important;
 }
 
-.equation-fullmath.term-gauge .katex *,
-.term-expanded-math.term-gauge .katex * {
+.project-expression-full.category-pink .katex *,
+.project-expanded-math.category-pink .katex * {
   color: #ff8ac8 !important;
 }
 
-.equation-fullmath.term-fermion .katex,
-.term-expanded-math.term-fermion .katex {
+.project-expression-full.category-blue .katex,
+.project-expanded-math.category-blue .katex {
   color: #7fb7ff;
 }
 
-.equation-fullmath.term-fermion-gen1 .katex,
-.term-expanded-math.term-fermion-gen1 .katex {
+.project-expression-full.category-blue-gen1 .katex,
+.project-expanded-math.category-blue-gen1 .katex {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-fermion-gen1 .katex *,
-.term-expanded-math.term-fermion-gen1 .katex * {
+.project-expression-full.category-blue-gen1 .katex *,
+.project-expanded-math.category-blue-gen1 .katex * {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-fermion-gen2 .katex,
-.term-expanded-math.term-fermion-gen2 .katex {
+.project-expression-full.category-blue-gen2 .katex,
+.project-expanded-math.category-blue-gen2 .katex {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-fermion-gen2 .katex *,
-.term-expanded-math.term-fermion-gen2 .katex * {
+.project-expression-full.category-blue-gen2 .katex *,
+.project-expanded-math.category-blue-gen2 .katex * {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-fermion-gen3 .katex,
-.term-expanded-math.term-fermion-gen3 .katex {
+.project-expression-full.category-blue-gen3 .katex,
+.project-expanded-math.category-blue-gen3 .katex {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-fermion-gen3 .katex *,
-.term-expanded-math.term-fermion-gen3 .katex * {
+.project-expression-full.category-blue-gen3 .katex *,
+.project-expanded-math.category-blue-gen3 .katex * {
   color: #7fb7ff !important;
 }
 
-.equation-fullmath.term-higgs .katex,
-.term-expanded-math.term-higgs .katex {
+.project-expression-full.category-orange .katex,
+.project-expanded-math.category-orange .katex {
   color: #ffbd83;
 }
 
-.equation-fullmath.term-yukawa .katex,
-.term-expanded-math.term-yukawa .katex {
+.project-expression-full.category-purple .katex,
+.project-expanded-math.category-purple .katex {
   color: #d8acff !important;
 }
 
-.equation-fullmath.term-yukawa .katex *,
-.term-expanded-math.term-yukawa .katex * {
+.project-expression-full.category-purple .katex *,
+.project-expanded-math.category-purple .katex * {
   color: #d8acff !important;
 }
 
-.term-gauge {
+.category-pink {
   border-color: rgba(255, 138, 200, 0.45);
 }
 
-.term-gauge .katex,
-.term-gauge h3,
-.equation-separator.term-gauge {
+.category-pink .katex,
+.category-pink h3,
+.project-separator.category-pink {
   color: #ff8ac8;
 }
 
-.term-fermion {
+.category-blue {
   border-color: rgba(127, 183, 255, 0.44);
 }
 
-.term-fermion .katex,
-.term-fermion h3,
-.equation-separator.term-fermion {
+.category-blue .katex,
+.category-blue h3,
+.project-separator.category-blue {
   color: #7fb7ff;
 }
 
-.term-higgs {
+.category-orange {
   border-color: rgba(254, 173, 112, 0.44);
 }
 
-.term-higgs .katex,
-.term-higgs h3,
-.equation-separator.term-higgs {
+.category-orange .katex,
+.category-orange h3,
+.project-separator.category-orange {
   color: #ffbd83;
 }
 
-.term-yukawa {
+.category-purple {
   border-color: rgba(210, 158, 255, 0.44);
 }
 
-.term-yukawa .katex,
-.term-yukawa h3,
-.equation-separator.term-yukawa {
+.category-purple .katex,
+.category-purple h3,
+.project-separator.category-purple {
   color: #d8acff;
 }
 
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
   .page-shell {
     padding-top: 8.3rem;
