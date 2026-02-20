@@ -1,3 +1,4 @@
+// This test verifies that CallBackendButton displays the backend message on success and a fallback message on failed requests.
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import CallBackendButton from "../CallBackendButton";
 

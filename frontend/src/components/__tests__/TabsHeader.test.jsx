@@ -1,3 +1,4 @@
+// This test verifies that TabsHeader renders branding/tabs and opens the contact panel when requested.
 import { fireEvent, render, screen } from "@testing-library/react";
 import TabsHeader from "../TabsHeader";
 

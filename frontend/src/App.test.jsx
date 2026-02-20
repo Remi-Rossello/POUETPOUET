@@ -1,3 +1,4 @@
+// This test verifies that the App renders the home screen and navigates to the backend demo from the Coming soon section.
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";

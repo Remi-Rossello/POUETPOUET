@@ -1,3 +1,4 @@
+// This test verifies that TabButton reflects active-state accessibility attributes and triggers its click handler.
 import { fireEvent, render, screen } from "@testing-library/react";
 import TabButton from "../TabButton";
 

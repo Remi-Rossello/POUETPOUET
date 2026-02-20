@@ -1,3 +1,4 @@
+// This test verifies that PublicationPanel shows summary/source information and opens the PDF preview with pagination controls.
 import { fireEvent, render, screen } from "@testing-library/react";
 import PublicationPanel from "../PublicationPanel";
 
