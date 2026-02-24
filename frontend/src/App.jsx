@@ -18,6 +18,16 @@ const certificationItems = [
   },
   {
     section: "Computer Science",
+    title: "Introduction to Scala Course",
+    issuer: "DataCamp",
+    date: "Issued Feb 2026",
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=datacamp.com",
+    credentialUrl:
+      "https://www.datacamp.com/completed/statement-of-accomplishment/course/1056fcbaccaf5269242357074ab325a89de9f97c",
+    diplomaImage: "/assets/images/scala-certif.png",
+  },
+  {
+    section: "Computer Science",
     title: "Learn Git: Introduction Course",
     issuer: "Codecademy",
     date: "Issued Dec 2025",
@@ -210,7 +220,7 @@ function App() {
 
         {activeTab === "about" && (
           <>
-            <h1 className="content-title about-rainbow-title">About</h1>
+            <h1 className="content-title">About</h1>
             <div className="about-top-media">
               <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
             </div>
