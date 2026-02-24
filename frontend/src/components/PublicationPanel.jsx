@@ -91,7 +91,7 @@ function PublicationPanel({ title, summary, sourceUrl, pdfUrl }) {
             {isPreviewVisible ? "Hide preview" : "Preview"}
           </button>
           <a className="button button-secondary" href={pdfUrl} target="_blank" rel="noreferrer">
-            Open
+            Open PDF in new tab
           </a>
           <a className="button button-secondary" href={pdfUrl} download>
             Download

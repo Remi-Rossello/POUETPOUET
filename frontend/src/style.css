@@ -866,6 +866,14 @@ h1 {
   margin-bottom: 0.75rem;
 }
 
+:root[data-theme="light"] .certifications-section-title {
+  color: var(--primary);
+  background: var(--surface-alt);
+  border-radius: 6px;
+  padding: 0.08rem 0.34rem;
+  display: inline-block;
+}
+
 .certification-card {
   display: flex;
   flex-direction: column;
