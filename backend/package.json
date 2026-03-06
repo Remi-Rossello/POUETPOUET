@@ -2,6 +2,8 @@
   "name": "website-backend",
   "version": "1.0.0",
   "private": true,
+  "author": "Rémi Rossello <remi.rossello@gmail.com> (https://remi-rossello.up.railway.app)",
+  "license": "MIT",
   "description": "Express backend serving the website frontend",
   "main": "server.js",
   "scripts": {

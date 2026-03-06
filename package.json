@@ -1,4 +1,6 @@
 {
   "name": "my-monorepo",
+  "author": "Rémi Rossello <remi.rossello@gmail.com> (https://remi-rossello.up.railway.app)",
+  "license": "MIT",
   "workspaces": ["frontend", "backend"]
 }

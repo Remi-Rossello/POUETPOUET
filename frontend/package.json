@@ -2,6 +2,8 @@
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
+  "author": "Rémi Rossello <remi.rossello@gmail.com> (https://remi-rossello.up.railway.app)",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
