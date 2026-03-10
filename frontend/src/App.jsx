@@ -135,6 +135,26 @@ const aboutCvOptions = [
   },
 ];
 
+const projectSections = [
+  {
+    title: "Interactive",
+    items: [
+      { id: "lagrangian", title: "Lagrangian explorer", status: "In progress" },
+      { id: "backend-test", title: "Backend test - demo", status: "Available" },
+      { id: "field-catalog", title: "Field catalog", status: "Upcoming" },
+      { id: "computer-roadmap", title: "The ultimate computer roadmap", status: "Upcoming" },
+    ],
+  },
+  {
+    title: "Publications",
+    items: [
+      { id: "publication-lunar-geology", title: "Lunar geology", status: "Published" },
+      { id: "publication-spintronics", title: "Spintronics", status: "Published" },
+      { id: "publication-spectroscopy", title: "Spectroscopy", status: "Published" },
+    ],
+  },
+];
+
 /**
  * Root frontend component with tab-based navigation.
  * @returns {JSX.Element} Main application layout.
@@ -142,7 +162,6 @@ const aboutCvOptions = [
 function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [activeProject, setActiveProject] = useState(null);
-  const [isProjectsPanelOpen, setIsProjectsPanelOpen] = useState(true);
   const [selectedCertification, setSelectedCertification] = useState(null);
   const [aboutTrack, setAboutTrack] = useState("engineering");
 
@@ -160,6 +179,8 @@ function App() {
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
   const activeTabLabel = tabs.find((tab) => tab.id === activeTab)?.label || "Home";
+  const projectItems = projectSections.flatMap((section) => section.items);
+  const selectedProjectMeta = projectItems.find((project) => project.id === activeProject) || null;
 
   /**
     * Opens the Projects tab and selects a specific project.
@@ -168,7 +189,6 @@ function App() {
    */
   const openProjectTab = (projectId) => {
     setActiveProject(projectId);
-    setIsProjectsPanelOpen(true);
     setActiveTab("projects");
   };
 
@@ -314,47 +334,41 @@ function App() {
 
         {activeTab === "projects" && (
           <section id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-            <div className={`projects-layout projects-layout-edge ${!isProjectsPanelOpen ? "is-panel-hidden" : ""}`.trim()}>
-              <button
-                className="button button-secondary projects-sidebar-toggle projects-sidebar-toggle-floating"
-                type="button"
-                onClick={() => setIsProjectsPanelOpen((isOpen) => !isOpen)}
-                aria-label={isProjectsPanelOpen ? "Hide project panel" : "Show project panel"}
-              >
-                ☰
-              </button>
+            <h1 className="content-title">Projects</h1>
+            {!activeProject && (
+              <div className="projects-sections">
+                {projectSections.map((section) => (
+                  <section className="projects-section" key={section.title} aria-label={section.title}>
+                    <h2 className="projects-section-title">{section.title}</h2>
+                    <div className="projects-grid" aria-label={`${section.title} projects`}>
+                      {section.items.map((project) => (
+                        <button
+                          className="certification-card certification-card-button project-card"
+                          key={project.id}
+                          type="button"
+                          onClick={() => setActiveProject(project.id)}
+                        >
+                          <p className="certification-issuer">{section.title}</p>
+                          <h3 className="certification-title">{project.title}</h3>
+                          <p className="certification-date">{project.status}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            )}
 
-              {isProjectsPanelOpen && (
-                <aside className="projects-sidebar" aria-label="Projects sidebar">
-                  <p className="projects-sidebar-heading">Interactive</p>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("lagrangian")}>
-                    Lagrangian explorer
-                  </button>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("backend-test")}>
-                    Backend test - demo
-                  </button>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("field-catalog")}>
-                    Field catalog · Upcoming
-                  </button>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("computer-roadmap")}>
-                    The ultimate computer roadmap · Upcoming
-                  </button>
-
-                  <p className="projects-sidebar-heading projects-sidebar-heading-separator">Publications</p>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-lunar-geology")}>
-                    Lunar geology
-                  </button>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-spintronics")}>
-                    Spintronics
-                  </button>
-                  <button className="button project-entry-button" type="button" onClick={() => setActiveProject("publication-spectroscopy")}>
-                    Spectroscopy
-                  </button>
-                </aside>
-              )}
-
-              <div className="projects-content">
-                {!activeProject && <p className="project-loading">Choose a project from the left panel.</p>}
+            {activeProject && (
+              <div className="projects-content projects-content-cards">
+                {selectedProjectMeta && (
+                  <div className="project-selected-head" aria-live="polite">
+                    <h2>{selectedProjectMeta.title}</h2>
+                    <button className="button button-secondary" type="button" onClick={() => setActiveProject(null)}>
+                      ← Back to projects
+                    </button>
+                  </div>
+                )}
 
                 {activeProject === "lagrangian" && (
                   <Suspense fallback={<p className="project-loading">Loading equation...</p>}>
@@ -400,7 +414,7 @@ function App() {
                   />
                 )}
               </div>
-            </div>
+            )}
           </section>
         )}
 
