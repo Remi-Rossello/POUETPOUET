@@ -61,6 +61,18 @@ body {
   min-height: 100vh;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* === GLOBAL LAYOUT === */
 .page-shell {
   width: min(1320px, 96%);
@@ -240,6 +252,22 @@ body {
   color: #f5f7fa;
   border-color: var(--border);
   background: rgba(20, 30, 45, 0.45);
+}
+
+button:focus-visible,
+a:focus-visible,
+.tab-button:focus-visible,
+.social-link:focus-visible,
+.theme-toggle:focus-visible,
+.home-panel-card:focus-visible,
+.about-cv-card:focus-visible,
+.project-entry-button:focus-visible,
+.project-expression-button:focus-visible,
+.project-back-button:focus-visible,
+.project-fullscreen-button:focus-visible,
+.button:focus-visible {
+  outline: 3px solid #f7cd6a;
+  outline-offset: 2px;
 }
 
 .contact-toggle {

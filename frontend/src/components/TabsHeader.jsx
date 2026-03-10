@@ -27,6 +27,27 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
+  /**
+   * Enables left/right keyboard navigation inside the main tabs.
+   * @param {React.KeyboardEvent<HTMLElement>} event Keyboard event.
+   * @returns {void}
+   */
+  const handleTabsKeyDown = (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+      return;
+    }
+
+    event.preventDefault();
+    const currentIndex = tabs.findIndex((tab) => tab.id === activeTab);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    const delta = event.key === "ArrowRight" ? 1 : -1;
+    const nextIndex = (currentIndex + delta + tabs.length) % tabs.length;
+    onTabChange(tabs[nextIndex].id);
+  };
+
   useEffect(() => {
     if (!isContactOpen) {
       return;
@@ -71,10 +92,12 @@ function TabsHeader({ tabs, activeTab, onTabChange }) {
           <span className="brand-name">Remi Rossello</span>
         </div>
 
-        <nav className="header-nav" aria-label="Main tabs">
+        <nav className="header-nav" aria-label="Main tabs" role="tablist" onKeyDown={handleTabsKeyDown}>
           {tabs.map((tab) => (
             <TabButton
               key={tab.id}
+              id={`tab-${tab.id}`}
+              controlsId={`panel-${tab.id}`}
               label={tab.label}
               isActive={activeTab === tab.id}
               onClick={() => onTabChange(tab.id)}

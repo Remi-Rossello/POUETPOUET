@@ -159,6 +159,7 @@ function App() {
   const selectedAboutCv = aboutCvOptions.find((option) => option.id === aboutTrack) || aboutCvOptions[0];
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
+  const activeTabLabel = tabs.find((tab) => tab.id === activeTab)?.label || "Home";
 
   /**
     * Opens the Projects tab and selects a specific project.
@@ -174,10 +175,11 @@ function App() {
   return (
     <main className="page-shell">
       <TabsHeader tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+      <p className="sr-only" role="status" aria-live="polite">Current section: {activeTabLabel}</p>
 
       <section className={`page-content ${activeTab === "home" ? "hero" : ""}`}>
         {activeTab === "home" && (
-          <>
+          <section id="panel-home" role="tabpanel" aria-labelledby="tab-home">
             <h1 className="about-rainbow-title">Welcome to my website !</h1>
             <div className="home-panels">
               <section className="home-panel" aria-label="Latest news">
@@ -215,11 +217,11 @@ function App() {
                 </div>
               </section>
             </div>
-          </>
+          </section>
         )}
 
         {activeTab === "about" && (
-          <>
+          <section id="panel-about" role="tabpanel" aria-labelledby="tab-about">
             <h1 className="content-title">About</h1>
             <div className="about-top-media">
               <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
@@ -273,10 +275,14 @@ function App() {
             <div className="about-cv-picker" role="tablist" aria-label="CV selector">
               {aboutCvOptions.map((option) => (
                 <button
+                  id={`about-cv-${option.id}`}
                   key={option.id}
                   className={`about-cv-card ${aboutTrack === option.id ? "is-active" : ""}`}
                   type="button"
                   onClick={() => setAboutTrack(option.id)}
+                  role="tab"
+                  aria-selected={aboutTrack === option.id}
+                  aria-controls="about-cv-panel"
                 >
                   <span className="about-cv-card-title">{option.label}</span>
                   <span className="about-cv-card-subtitle">{option.subtitle}</span>
@@ -284,7 +290,12 @@ function App() {
               ))}
             </div>
 
-            <div className="about-pdf-viewer">
+            <div
+              className="about-pdf-viewer"
+              id="about-cv-panel"
+              role="tabpanel"
+              aria-labelledby={`about-cv-${aboutTrack}`}
+            >
               <div className="about-pdf-head">
                 <p className="about-pdf-title">{selectedAboutCv.label}</p>
                 <div className="about-pdf-actions">
@@ -298,11 +309,11 @@ function App() {
               </div>
               <embed className="pdf-frame about-pdf-frame" src={selectedAboutPdfPreview} type="application/pdf" />
             </div>
-          </>
+          </section>
         )}
 
         {activeTab === "projects" && (
-          <>
+          <section id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
             <div className={`projects-layout projects-layout-edge ${!isProjectsPanelOpen ? "is-panel-hidden" : ""}`.trim()}>
               <button
                 className="button button-secondary projects-sidebar-toggle projects-sidebar-toggle-floating"
@@ -390,11 +401,11 @@ function App() {
                 )}
               </div>
             </div>
-          </>
+          </section>
         )}
 
         {activeTab === "certifications" && (
-          <>
+          <section id="panel-certifications" role="tabpanel" aria-labelledby="tab-certifications">
             <h1 className="content-title">Credentials</h1>
 
             {selectedCertification ? (
@@ -465,12 +476,11 @@ function App() {
                   return (
                     <section className="certifications-section" key={sectionTitle} aria-label={sectionTitle}>
                       <h2 className="certifications-section-title">{sectionTitle}</h2>
-                      <div className="certifications-grid" role="list" aria-label={`${sectionTitle} credentials`}>
+                      <div className="certifications-grid" aria-label={`${sectionTitle} credentials`}>
                         {sectionItems.map((certification) => (
                           <button
                             className="certification-card certification-card-button"
                             key={`${certification.title}-${certification.issuer}`}
-                            role="listitem"
                             type="button"
                             onClick={() => setSelectedCertification(certification)}
                           >
@@ -491,7 +501,7 @@ function App() {
                 })}
               </div>
             )}
-          </>
+          </section>
         )}
       </section>
     </main>
