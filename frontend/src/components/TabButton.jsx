@@ -1,5 +1,5 @@
 /**
- * Renders a clickable tab button with active state.
+ * Renders a clickable tab button with active state. Used in the tabs header for navigation.
  * @param {object} props Component props.
  * @param {string} props.label Button label.
  * @param {boolean} props.isActive Indicates whether the tab is active.

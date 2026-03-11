@@ -1,11 +1,11 @@
 import { Suspense, lazy, useState } from "react";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-import CallBackendButton from "./components/CallBackendButton";
-import PublicationPanel from "./components/PublicationPanel";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./components/LagrangianPanel"));
+const CallBackendButton = lazy(() => import("./components/CallBackendButton"));
+const PublicationPanel = lazy(() => import("./components/PublicationPanel"));
 const linkedInCertificationsUrl = "https://www.linkedin.com/in/remi-rossello/details/certifications/";
 
 const certificationItems = [
@@ -140,7 +140,7 @@ const projectSections = [
     title: "Interactive",
     items: [
       { id: "lagrangian", title: "Lagrangian explorer", status: "In progress" },
-      { id: "backend-test", title: "Backend test - demo", status: "Available" },
+      { id: "backend-test", title: "Digit recognizer - backend AI", status: "Available" },
       { id: "field-catalog", title: "Field catalog", status: "Upcoming" },
       { id: "computer-roadmap", title: "The ultimate computer roadmap", status: "Upcoming" },
     ],
@@ -225,8 +225,8 @@ function App() {
                     <span className="home-panel-card-link">Open in Projects →</span>
                   </button>
                   <button className="home-panel-card" type="button" onClick={() => openProjectTab("backend-test")}>
-                    <span className="home-panel-card-title">Backend test - demo</span>
-                    <span className="home-panel-card-status">Upcoming</span>
+                    <span className="home-panel-card-title">Digit recognizer - backend AI</span>
+                    <span className="home-panel-card-status">Available</span>
                     <span className="home-panel-card-link">Open in Projects →</span>
                   </button>
                   <button className="home-panel-card" type="button" onClick={() => openProjectTab("field-catalog")}>
@@ -370,49 +370,47 @@ function App() {
                   </div>
                 )}
 
-                {activeProject === "lagrangian" && (
-                  <Suspense fallback={<p className="project-loading">Loading equation...</p>}>
-                    <LagrangianPanel />
-                  </Suspense>
-                )}
+                <Suspense fallback={<p className="project-loading">Loading project...</p>}>
+                  {activeProject === "lagrangian" && <LagrangianPanel />}
 
-                {activeProject === "backend-test" && <CallBackendButton />}
+                  {activeProject === "backend-test" && <CallBackendButton />}
 
-                {activeProject === "field-catalog" && (
-                  <p className="project-loading">Upcoming</p>
-                )}
+                  {activeProject === "field-catalog" && (
+                    <p className="project-loading">Upcoming</p>
+                  )}
 
-                {activeProject === "computer-roadmap" && (
-                  <p className="project-loading">Upcoming</p>
-                )}
+                  {activeProject === "computer-roadmap" && (
+                    <p className="project-loading">Upcoming</p>
+                  )}
 
-                {activeProject === "publication-spintronics" && (
-                  <PublicationPanel
-                    key="publication-spintronics"
-                    title="Spintronics"
-                    summary="Friendly introduction to the Dzyaloshinkii-Moriya effect, magnetic skyrmions, and potential applications in spintronics. Written in French with co-author Alexandra Lepage."
-                    pdfUrl="/assets/docs/Alexandra_lepage_remi_rossello_DMI.pdf"
-                  />
-                )}
+                  {activeProject === "publication-spintronics" && (
+                    <PublicationPanel
+                      key="publication-spintronics"
+                      title="Spintronics"
+                      summary="Friendly introduction to the Dzyaloshinkii-Moriya effect, magnetic skyrmions, and potential applications in spintronics. Written in French with co-author Alexandra Lepage."
+                      pdfUrl="/assets/docs/Alexandra_lepage_remi_rossello_DMI.pdf"
+                    />
+                  )}
 
-                {activeProject === "publication-spectroscopy" && (
-                  <PublicationPanel
-                    key="publication-spectroscopy"
-                    title="Spectroscopy"
-                    summary="General overview of two common optical spectroscopy techniques: Raman spectroscopy, and Fourier-transform infrared spectroscopy (FTIR)."
-                    pdfUrl="/assets/docs/Raman_vs_FTIR_Remi_Rossello.pdf"
-                  />
-                )}
+                  {activeProject === "publication-spectroscopy" && (
+                    <PublicationPanel
+                      key="publication-spectroscopy"
+                      title="Spectroscopy"
+                      summary="General overview of two common optical spectroscopy techniques: Raman spectroscopy, and Fourier-transform infrared spectroscopy (FTIR)."
+                      pdfUrl="/assets/docs/Raman_vs_FTIR_Remi_Rossello.pdf"
+                    />
+                  )}
 
-                {activeProject === "publication-lunar-geology" && (
-                  <PublicationPanel
-                    key="publication-lunar-geology"
-                    title="Lunar geology"
-                    summary="In this scientific proceeding published at the European Lunar Symposium 2025 in Munster, Germany, planetary geologist Jessica Flahaut uses my IDL lunar multispectral camera simulation, and automatic mineral classification scripts, to see if useful insights could be extracted with these techniques, and the future CNES lunar rover using them."
-                    sourceUrl="https://zenodo.org/records/15470779"
-                    pdfUrl="/assets/docs/ELS_Flahautv3.pdf"
-                  />
-                )}
+                  {activeProject === "publication-lunar-geology" && (
+                    <PublicationPanel
+                      key="publication-lunar-geology"
+                      title="Lunar geology"
+                      summary="In this scientific proceeding published at the European Lunar Symposium 2025 in Munster, Germany, planetary geologist Jessica Flahaut uses my IDL lunar multispectral camera simulation, and automatic mineral classification scripts, to see if useful insights could be extracted with these techniques, and the future CNES lunar rover using them."
+                      sourceUrl="https://zenodo.org/records/15470779"
+                      pdfUrl="/assets/docs/ELS_Flahautv3.pdf"
+                    />
+                  )}
+                </Suspense>
               </div>
             )}
           </section>

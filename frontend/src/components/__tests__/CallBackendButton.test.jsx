@@ -1,30 +1,44 @@
-// This test verifies that CallBackendButton displays the backend message on success and a fallback message on failed requests.
+// This test verifies that CallBackendButton sends drawn grid data and displays prediction or fallback states.
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import CallBackendButton from "../CallBackendButton";
 
 describe("CallBackendButton", () => {
-  it("shows backend response on success", async () => {
+  it("shows prediction on success", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ message: "Hello from backend" }),
+      json: async () => ({ digit: 8, confidence: 0.92 }),
     });
 
     render(<CallBackendButton />);
-    fireEvent.click(screen.getByRole("button", { name: /call backend/i }));
+    fireEvent.pointerDown(screen.getByLabelText("Cell 1"));
+    fireEvent.pointerUp(screen.getByLabelText("Cell 1"));
+    fireEvent.click(screen.getByRole("button", { name: /predict digit/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Hello from backend")).toBeInTheDocument();
+      expect(screen.getByText("8")).toBeInTheDocument();
+      expect(screen.getByText(/confidence: 92%/i)).toBeInTheDocument();
     });
   });
 
-  it("shows fallback message on failure", async () => {
+  it("asks for drawing when trying to predict with an empty grid", async () => {
+    render(<CallBackendButton />);
+    fireEvent.click(screen.getByRole("button", { name: /predict digit/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/draw a digit first/i)).toBeInTheDocument();
+    });
+  });
+
+  it("shows fallback message on backend failure", async () => {
     global.fetch = vi.fn().mockResolvedValue({ ok: false });
 
     render(<CallBackendButton />);
-    fireEvent.click(screen.getByRole("button", { name: /call backend/i }));
+    fireEvent.pointerDown(screen.getByLabelText("Cell 1"));
+    fireEvent.pointerUp(screen.getByLabelText("Cell 1"));
+    fireEvent.click(screen.getByRole("button", { name: /predict digit/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Failed to call backend")).toBeInTheDocument();
+      expect(screen.getByText("Prediction failed. Please retry.")).toBeInTheDocument();
     });
   });
 });

@@ -1084,7 +1084,79 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(12, 19, 29, 0.68), rgba(9, 14, 22, 0.74));
+}
+
+.backend-demo-title {
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.backend-demo-subtitle {
+  color: var(--text-soft);
+  text-align: center;
+  max-width: 560px;
+}
+
+.digit-grid {
+  display: grid;
+  gap: 0.16rem;
+  width: min(360px, 92vw);
+  padding: 0.45rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: rgba(5, 8, 12, 0.95);
+}
+
+.digit-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(139, 155, 176, 0.12);
+  border-radius: 2px;
+  background: rgba(14, 22, 34, 0.92);
+  cursor: crosshair;
+  transition: background 0.08s ease, border-color 0.08s ease;
+}
+
+.digit-cell.is-active {
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.backend-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.prediction-card {
+  min-width: 220px;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  padding: 0.8rem 1rem;
+  background: rgba(13, 21, 31, 0.85);
+}
+
+.prediction-card-label {
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  color: var(--text-soft);
+}
+
+.prediction-card-digit {
+  font-size: 2.4rem;
+  line-height: 1;
+  margin: 0.2rem 0;
+}
+
+.prediction-card-confidence {
+  color: var(--text-soft-strong);
+  font-size: 0.9rem;
 }
 
 .backend-response {
@@ -1986,5 +2058,14 @@ h1 {
   .project-selected-head {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .backend-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .backend-actions .button {
+    width: 100%;
   }
 }

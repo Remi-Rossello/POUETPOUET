@@ -13,7 +13,6 @@ Welcome to my website, showcasing projects, publications, and credentials.
 
 ### Backend
 - Node.js + Express 4
-- CORS with explicit and Railway wildcard origin checks
 
 ### Tooling
 - npm workspaces (monorepo root)
@@ -71,7 +70,6 @@ npm run dev
 
 Frontend runs on `http://localhost:5173`.
 
-Vite proxies `/api/*` to `http://localhost:3000` in local development.
 
 ## Available Scripts
 
