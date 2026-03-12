@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
 
 if (!window.matchMedia) {
   window.matchMedia = () => ({
@@ -13,9 +14,11 @@ if (!window.matchMedia) {
   });
 }
 
-if (!window.scrollTo) {
-  window.scrollTo = () => {};
-}
+Object.defineProperty(window, "scrollTo", {
+  value: vi.fn(),
+  writable: true,
+  configurable: true,
+});
 
 if (!globalThis.localStorage || typeof globalThis.localStorage.getItem !== "function") {
   const store = new Map();

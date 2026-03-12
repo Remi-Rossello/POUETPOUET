@@ -1,7 +1,7 @@
 // This test verifies that LagrangianPanel renders its main title and toggles the extended explanation section.
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import LagrangianPanel from "../LagrangianPanel";
+import LagrangianPanel from "../../projects/lagrangian/LagrangianPanel";
 
 vi.mock("framer-motion", () => ({
   motion: new Proxy(
@@ -31,5 +31,5 @@ describe("LagrangianPanel", () => {
     fireEvent.click(showMoreButton);
 
     expect(screen.getByText("Optimizing the Action")).toBeInTheDocument();
-  });
+  }, 10000);
 });

@@ -11,8 +11,8 @@ describe("TabsHeader", () => {
   it("renders brand and tabs", () => {
     render(<TabsHeader tabs={tabs} activeTab="home" onTabChange={() => {}} />);
     expect(screen.getByText("Remi Rossello")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Home" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Projects" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Home" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Projects" })).toBeInTheDocument();
   });
 
   it("opens contact panel", () => {

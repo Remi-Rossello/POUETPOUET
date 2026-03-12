@@ -1,21 +1,51 @@
 import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
+import spintronicsPdf from "./assets/Alexandra_lepage_remi_rossello_DMI.pdf";
+import lunarGeologyPdf from "./assets/ELS_Flahautv3.pdf";
+import spectroscopyPdf from "./assets/Raman_vs_FTIR_Remi_Rossello.pdf";
+import "./publications.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
+
+const publications = {
+  "publication-spintronics": {
+    title: "Spintronics",
+    summary:
+      "Friendly introduction to the Dzyaloshinkii-Moriya effect, magnetic skyrmions, and potential applications in spintronics. Written in French with co-author Alexandra Lepage.",
+    pdfUrl: spintronicsPdf,
+  },
+  "publication-spectroscopy": {
+    title: "Spectroscopy",
+    summary:
+      "General overview of two common optical spectroscopy techniques: Raman spectroscopy, and Fourier-transform infrared spectroscopy (FTIR).",
+    pdfUrl: spectroscopyPdf,
+  },
+  "publication-lunar-geology": {
+    title: "Lunar geology",
+    summary:
+      "In this scientific proceeding published at the European Lunar Symposium 2025 in Munster, Germany, planetary geologist Jessica Flahaut uses my IDL lunar multispectral camera simulation, and automatic mineral classification scripts, to see if useful insights could be extracted with these techniques, and the future CNES lunar rover using them.",
+    sourceUrl: "https://zenodo.org/records/15470779",
+    pdfUrl: lunarGeologyPdf,
+  },
+};
 
 /**
  * Displays a publication with summary, actions, and paginated PDF preview.
  * @param {object} props Component props.
- * @param {string} props.title Publication title.
- * @param {string} props.summary Summary shown in the introduction.
- * @param {string} [props.sourceUrl] Optional source link.
- * @param {string} props.pdfUrl PDF file URL to preview.
+ * @param {string} props.publicationId Publication identifier.
  * @returns {JSX.Element} Publication panel.
  */
-function PublicationPanel({ title, summary, sourceUrl, pdfUrl }) {
+function PublicationPanel({ publicationId }) {
+  const publication = publications[publicationId];
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+
+  if (!publication) {
+    return null;
+  }
+
+  const { title, summary, sourceUrl, pdfUrl } = publication;
 
   useEffect(() => {
     setPage(1);

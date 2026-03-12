@@ -1,0 +1,104 @@
+.dino-skill-panel,
+.backend-project-panel {
+  --dino-accent: #d47a11;
+  --dino-accent-strong: #8d4d00;
+  --dino-accent-soft: rgba(255, 206, 120, 0.16);
+  --dino-panel-bg: linear-gradient(145deg, rgba(18, 27, 41, 0.88), rgba(10, 16, 28, 0.92));
+  --dino-card-border: rgba(224, 185, 120, 0.24);
+  --dino-code-bg: rgba(7, 11, 18, 0.92);
+}
+
+:root[data-theme="light"] .dino-skill-panel,
+:root[data-theme="light"] .backend-project-panel {
+  --dino-accent: #b86409;
+  --dino-accent-strong: #6b4313;
+  --dino-accent-soft: rgba(255, 191, 92, 0.25);
+  --dino-panel-bg: linear-gradient(135deg, rgba(255, 248, 233, 0.96), rgba(236, 245, 255, 0.94));
+  --dino-card-border: rgba(167, 114, 38, 0.2);
+  --dino-code-bg: rgba(255, 250, 241, 0.98);
+}
+
+.dino-simple-header {
+  margin-bottom: 1rem;
+}
+
+.dino-eyebrow,
+.dino-raw-source-summary {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dino-eyebrow {
+  color: var(--dino-accent);
+}
+
+.dino-content-title {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.dino-story {
+  margin-bottom: 1rem;
+  padding: 1.2rem 1.3rem;
+  border: 1px solid var(--dino-card-border);
+  border-radius: 18px;
+  background: var(--dino-panel-bg);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+}
+
+:root[data-theme="light"] .dino-story,
+:root[data-theme="light"] .dino-skill-content {
+  box-shadow: 0 14px 34px rgba(73, 91, 116, 0.12);
+}
+
+.dino-story-paragraph,
+.dino-docs-caption,
+.dino-skill-preview {
+  text-shadow: none;
+}
+
+.dino-story-paragraph {
+  margin: 0 0 1rem;
+  color: var(--text-soft-strong);
+  line-height: 1.75;
+  font-size: 1.03rem;
+}
+
+.dino-story-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.dino-story a {
+  color: var(--dino-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.dino-story a:hover {
+  text-decoration: underline;
+}
+
+.dino-skill-content {
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1.55;
+  background: var(--dino-panel-bg);
+  border-color: var(--dino-card-border);
+  border-radius: 18px;
+  color: var(--text-main);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.14);
+}
+
+:root[data-theme="light"] .dino-skill-content {
+  box-shadow: 0 16px 36px rgba(71, 87, 111, 0.12);
+}
+
+@media (max-width: 700px) {
+  .dino-story,
+  .dino-skill-content {
+    padding-left: 0.95rem;
+    padding-right: 0.95rem;
+  }
+}

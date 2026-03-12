@@ -1,11 +1,12 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import TabsHeader from "./components/TabsHeader";
 
-const LagrangianPanel = lazy(() => import("./components/LagrangianPanel"));
-const CallBackendButton = lazy(() => import("./components/CallBackendButton"));
-const PublicationPanel = lazy(() => import("./components/PublicationPanel"));
+const LagrangianPanel = lazy(() => import("./projects/lagrangian/LagrangianPanel"));
+const DigitRecognizerPanel = lazy(() => import("./projects/digit-recognizer/DigitRecognizerPanel"));
+const DinoSkillPanel = lazy(() => import("./projects/dino/DinoSkillPanel"));
+const PublicationPanel = lazy(() => import("./projects/publications/PublicationPanel"));
 const linkedInCertificationsUrl = "https://www.linkedin.com/in/remi-rossello/details/certifications/";
 
 const certificationItems = [
@@ -120,6 +121,31 @@ const certificationItems = [
   },
 ];
 
+const latestNewsItems = [
+  {
+    id: "dino-skill",
+    title: "Agent Skill: Dino Game",
+    status: "Available",
+    date: "12 mars 2026",
+    sortDate: "2026-03-12",
+  },
+  {
+    id: "backend-test",
+    title: "Digit recognizer",
+    status: "Available",
+    date: "12 mars 2026",
+    sortDate: "2026-03-12",
+  },
+  {
+    id: "lagrangian",
+    title: "Lagrangian explorer",
+    status: "In progress",
+    date: "17 fevrier 2026",
+    sortDate: "2026-02-17",
+    previewMath: String.raw`\mathcal{L}_{SM}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+i\bar{\psi}\gamma^\mu D_\mu\psi-\left(y\bar{\psi}_L H\psi_R+h.c.\right)+|D_\mu H|^2-V(H)`,
+  },
+].sort((leftItem, rightItem) => rightItem.sortDate.localeCompare(leftItem.sortDate));
+
 const aboutCvOptions = [
   {
     id: "engineering",
@@ -141,6 +167,7 @@ const projectSections = [
     items: [
       { id: "lagrangian", title: "Lagrangian explorer", status: "In progress" },
       { id: "backend-test", title: "Digit recognizer - backend AI", status: "Available" },
+      { id: "dino-skill", title: "Agent Skill: Dino Game", status: "Available" },
       { id: "field-catalog", title: "Field catalog", status: "Upcoming" },
       { id: "computer-roadmap", title: "The ultimate computer roadmap", status: "Upcoming" },
     ],
@@ -179,8 +206,14 @@ function App() {
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
   const activeTabLabel = tabs.find((tab) => tab.id === activeTab)?.label || "Home";
-  const projectItems = projectSections.flatMap((section) => section.items);
-  const selectedProjectMeta = projectItems.find((project) => project.id === activeProject) || null;
+
+  useEffect(() => {
+    if (activeTab !== "projects") {
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeProject, activeTab]);
 
   /**
     * Opens the Projects tab and selects a specific project.
@@ -202,20 +235,6 @@ function App() {
           <section id="panel-home" role="tabpanel" aria-labelledby="tab-home">
             <h1 className="about-rainbow-title">Welcome to my website !</h1>
             <div className="home-panels">
-              <section className="home-panel" aria-label="Latest news">
-                <h2 className="home-panel-title">Latest news</h2>
-                <button className="home-panel-card" type="button" onClick={() => openProjectTab("lagrangian")}>
-                  <span className="home-panel-card-title">Lagrangian explorer</span>
-                  <span className="home-panel-card-status">In progress</span>
-                  <span className="home-panel-preview-math" aria-hidden="true">
-                    <InlineMath
-                      math={String.raw`\mathcal{L}_{SM}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+i\bar{\psi}\gamma^\mu D_\mu\psi-\left(y\bar{\psi}_L H\psi_R+h.c.\right)+|D_\mu H|^2-V(H)`}
-                    />
-                  </span>
-                  <span className="home-panel-card-link">Open in Projects →</span>
-                </button>
-              </section>
-
               <section className="home-panel" aria-label="Comming soon">
                 <h2 className="home-panel-title">Comming soon</h2>
                 <div className="home-panel-list">
@@ -224,16 +243,37 @@ function App() {
                     <span className="home-panel-card-status">Planned</span>
                     <span className="home-panel-card-link">Open in Projects →</span>
                   </button>
-                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("backend-test")}>
-                    <span className="home-panel-card-title">Digit recognizer - backend AI</span>
-                    <span className="home-panel-card-status">Available</span>
-                    <span className="home-panel-card-link">Open in Projects →</span>
-                  </button>
                   <button className="home-panel-card" type="button" onClick={() => openProjectTab("field-catalog")}>
                     <span className="home-panel-card-title">Field catalog</span>
                     <span className="home-panel-card-status">Upcoming</span>
                     <span className="home-panel-card-link">Open in Projects →</span>
                   </button>
+                </div>
+              </section>
+
+              <section className="home-panel" aria-label="Latest news">
+                <h2 className="home-panel-title">Latest news</h2>
+                <div className="home-panel-list">
+                  {latestNewsItems.map((item) => (
+                    <button
+                      key={item.id}
+                      className="home-panel-card"
+                      type="button"
+                      onClick={() => openProjectTab(item.id)}
+                    >
+                      <span className="home-panel-card-head">
+                        <span className="home-panel-card-title">{item.title}</span>
+                        <span className="home-panel-card-date">{item.date}</span>
+                      </span>
+                      <span className="home-panel-card-status">{item.status}</span>
+                      {item.previewMath && (
+                        <span className="home-panel-preview-math" aria-hidden="true">
+                          <InlineMath math={item.previewMath} />
+                        </span>
+                      )}
+                      <span className="home-panel-card-link">Open in Projects →</span>
+                    </button>
+                  ))}
                 </div>
               </section>
             </div>
@@ -334,46 +374,47 @@ function App() {
 
         {activeTab === "projects" && (
           <section id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-            <h1 className="content-title">Projects</h1>
             {!activeProject && (
-              <div className="projects-sections">
-                {projectSections.map((section) => (
-                  <section className="projects-section" key={section.title} aria-label={section.title}>
-                    <h2 className="projects-section-title">{section.title}</h2>
-                    <div className="projects-grid" aria-label={`${section.title} projects`}>
-                      {section.items.map((project) => (
-                        <button
-                          className="certification-card certification-card-button project-card"
-                          key={project.id}
-                          type="button"
-                          onClick={() => setActiveProject(project.id)}
-                        >
-                          <p className="certification-issuer">{section.title}</p>
-                          <h3 className="certification-title">{project.title}</h3>
-                          <p className="certification-date">{project.status}</p>
-                        </button>
-                      ))}
-                    </div>
-                  </section>
-                ))}
-              </div>
+              <>
+                <h1 className="content-title">Projects</h1>
+                <div className="projects-sections">
+                  {projectSections.map((section) => (
+                    <section className="projects-section" key={section.title} aria-label={section.title}>
+                      <h2 className="projects-section-title">{section.title}</h2>
+                      <div className="projects-grid" aria-label={`${section.title} projects`}>
+                        {section.items.map((project) => (
+                          <button
+                            className="certification-card certification-card-button project-card"
+                            key={project.id}
+                            type="button"
+                            onClick={() => setActiveProject(project.id)}
+                          >
+                            <p className="certification-issuer">{section.title}</p>
+                            <h3 className="certification-title">{project.title}</h3>
+                            <p className="certification-date">{project.status}</p>
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              </>
             )}
 
             {activeProject && (
               <div className="projects-content projects-content-cards">
-                {selectedProjectMeta && (
-                  <div className="project-selected-head" aria-live="polite">
-                    <h2>{selectedProjectMeta.title}</h2>
-                    <button className="button button-secondary" type="button" onClick={() => setActiveProject(null)}>
-                      ← Back to projects
-                    </button>
-                  </div>
-                )}
+                <div className="project-detail-toolbar">
+                  <button className="button button-secondary" type="button" onClick={() => setActiveProject(null)}>
+                    ← Back to projects
+                  </button>
+                </div>
 
                 <Suspense fallback={<p className="project-loading">Loading project...</p>}>
                   {activeProject === "lagrangian" && <LagrangianPanel />}
 
-                  {activeProject === "backend-test" && <CallBackendButton />}
+                  {activeProject === "backend-test" && <DigitRecognizerPanel />}
+
+                  {activeProject === "dino-skill" && <DinoSkillPanel />}
 
                   {activeProject === "field-catalog" && (
                     <p className="project-loading">Upcoming</p>
@@ -386,28 +427,21 @@ function App() {
                   {activeProject === "publication-spintronics" && (
                     <PublicationPanel
                       key="publication-spintronics"
-                      title="Spintronics"
-                      summary="Friendly introduction to the Dzyaloshinkii-Moriya effect, magnetic skyrmions, and potential applications in spintronics. Written in French with co-author Alexandra Lepage."
-                      pdfUrl="/assets/docs/Alexandra_lepage_remi_rossello_DMI.pdf"
+                      publicationId="publication-spintronics"
                     />
                   )}
 
                   {activeProject === "publication-spectroscopy" && (
                     <PublicationPanel
                       key="publication-spectroscopy"
-                      title="Spectroscopy"
-                      summary="General overview of two common optical spectroscopy techniques: Raman spectroscopy, and Fourier-transform infrared spectroscopy (FTIR)."
-                      pdfUrl="/assets/docs/Raman_vs_FTIR_Remi_Rossello.pdf"
+                      publicationId="publication-spectroscopy"
                     />
                   )}
 
                   {activeProject === "publication-lunar-geology" && (
                     <PublicationPanel
                       key="publication-lunar-geology"
-                      title="Lunar geology"
-                      summary="In this scientific proceeding published at the European Lunar Symposium 2025 in Munster, Germany, planetary geologist Jessica Flahaut uses my IDL lunar multispectral camera simulation, and automatic mineral classification scripts, to see if useful insights could be extracted with these techniques, and the future CNES lunar rover using them."
-                      sourceUrl="https://zenodo.org/records/15470779"
-                      pdfUrl="/assets/docs/ELS_Flahautv3.pdf"
+                      publicationId="publication-lunar-geology"
                     />
                   )}
                 </Suspense>

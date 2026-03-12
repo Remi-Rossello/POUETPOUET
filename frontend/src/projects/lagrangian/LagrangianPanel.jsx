@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { BlockMath, InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import "./lagrangian.css";
 
 const equationTree = {
   root: {
