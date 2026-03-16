@@ -13,6 +13,10 @@ export default defineConfig({
           const originalFileName = assetInfo.originalFileNames?.[0]?.replace(/\\/g, "/");
 
           if (originalFileName) {
+            if (originalFileName.includes("/node_modules/katex/dist/fonts/")) {
+              return "assets/katex-fonts/[name]-[hash][extname]";
+            }
+
             const projectAssetMatch = originalFileName.match(/src\/projects\/([^/]+)\/assets\//);
             if (projectAssetMatch) {
               return `assets/projects/${projectAssetMatch[1]}/[name]-[hash][extname]`;
@@ -23,6 +27,14 @@ export default defineConfig({
         },
         manualChunks: (id) => {
           const normalizedId = id.replace(/\\/g, "/");
+
+          if (normalizedId.includes("/src/tabs/credentials/")) {
+            return "tabs/credentials/index";
+          }
+
+          if (normalizedId.includes("/src/tabs/projects/")) {
+            return "tabs/projects/index";
+          }
 
           if (normalizedId.includes("/src/projects/dino/")) {
             return "projects/dino/index";

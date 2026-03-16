@@ -140,52 +140,56 @@ function DigitRecognizerPanel() {
           <h2 className="backend-demo-title">Draw a digit</h2>
           <p className="backend-demo-subtitle">Click and drag inside the grid, then ask the backend model to predict it.</p>
 
-          <div
-            className="digit-grid"
-            role="grid"
-            aria-label="Digit drawing grid"
-            style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
-            onPointerUp={() => setIsDrawing(false)}
-            onPointerLeave={() => setIsDrawing(false)}
-          >
-            {pixels.map((pixel, index) => (
-              <button
-                key={index}
-                type="button"
-                role="gridcell"
-                draggable="false"
-                className={`digit-cell ${pixel ? "is-active" : ""}`}
-                aria-label={`Cell ${index + 1}`}
-                aria-pressed={pixel === 1}
-                onDragStart={(event) => event.preventDefault()}
-                onPointerDown={(event) => handlePointerDown(event, index)}
-                onPointerEnter={(event) => handlePointerEnter(event, index)}
-              />
-            ))}
-          </div>
-
-          <div className="backend-actions">
-            <button className="button" onClick={handlePredict} type="button" disabled={isLoading} aria-busy={isLoading}>
-              {isLoading ? "Predicting..." : "Predict digit"}
-            </button>
-            <button className="button button-secondary" onClick={handleClear} type="button" disabled={isLoading}>
-              Clear
-            </button>
-          </div>
-
-          {prediction && (
-            <div className="prediction-card" role="status" aria-live="polite">
-              <p className="prediction-card-label">Prediction</p>
-              <p className="prediction-card-digit">{prediction.digit}</p>
-              <p className="prediction-card-confidence">Confidence: {Math.round(prediction.confidence * 100)}%</p>
+          <div className="backend-workspace">
+            <div
+              className="digit-grid"
+              role="grid"
+              aria-label="Digit drawing grid"
+              style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
+              onPointerUp={() => setIsDrawing(false)}
+              onPointerLeave={() => setIsDrawing(false)}
+            >
+              {pixels.map((pixel, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  role="gridcell"
+                  draggable="false"
+                  className={`digit-cell ${pixel ? "is-active" : ""}`}
+                  aria-label={`Cell ${index + 1}`}
+                  aria-pressed={pixel === 1}
+                  onDragStart={(event) => event.preventDefault()}
+                  onPointerDown={(event) => handlePointerDown(event, index)}
+                  onPointerEnter={(event) => handlePointerEnter(event, index)}
+                />
+              ))}
             </div>
-          )}
 
-          {statusMessage && (
-            <p className="backend-response" role="status" aria-live="polite">
-              {statusMessage}
-            </p>
-          )}
+            <div className="backend-side-panel">
+              <div className="backend-actions">
+                <button className="button" onClick={handlePredict} type="button" disabled={isLoading} aria-busy={isLoading}>
+                  {isLoading ? "Predicting..." : "Predict digit"}
+                </button>
+                <button className="button button-secondary" onClick={handleClear} type="button" disabled={isLoading}>
+                  Clear
+                </button>
+              </div>
+
+              {prediction && (
+                <div className="prediction-card" role="status" aria-live="polite">
+                  <p className="prediction-card-label">Prediction</p>
+                  <p className="prediction-card-digit">{prediction.digit}</p>
+                  <p className="prediction-card-confidence">Confidence: {Math.round(prediction.confidence * 100)}%</p>
+                </div>
+              )}
+
+              {statusMessage && (
+                <p className="backend-response" role="status" aria-live="polite">
+                  {statusMessage}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 

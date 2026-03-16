@@ -7,6 +7,22 @@
   gap: 0.9rem;
 }
 
+.backend-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(160px, 180px);
+  gap: 0.75rem;
+  align-items: start;
+  justify-content: center;
+  width: 100%;
+}
+
+.backend-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-self: stretch;
+}
+
 .backend-project-content {
   text-align: center;
 }
@@ -25,7 +41,7 @@
 .digit-grid {
   display: grid;
   gap: 0;
-  width: min(448px, 94vw);
+  width: min(340px, 100%);
   padding: 0.35rem;
   border-radius: 12px;
   border: 1px solid var(--dino-card-border);
@@ -65,13 +81,17 @@
 
 .backend-actions {
   display: flex;
+  flex-direction: column;
   gap: 0.6rem;
-  justify-content: center;
-  flex-wrap: wrap;
+}
+
+.backend-actions .button {
+  width: 100%;
 }
 
 .prediction-card {
-  min-width: 220px;
+  min-width: 0;
+  width: 100%;
   text-align: center;
   border-radius: 10px;
   border: 1px solid var(--dino-card-border);
@@ -105,6 +125,8 @@
   color: var(--text-soft);
   font-size: 0.9rem;
   letter-spacing: 0.02em;
+  text-align: left;
+  width: 100%;
 }
 
 .backend-architecture-panel {
@@ -230,10 +252,17 @@
   max-width: 120px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 520px) {
+  .backend-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .backend-side-panel {
+    width: 100%;
+  }
+
   .backend-actions {
     width: 100%;
-    flex-direction: column;
   }
 
   .backend-actions .button {

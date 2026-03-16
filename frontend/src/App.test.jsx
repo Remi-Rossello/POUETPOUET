@@ -21,7 +21,9 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText(/welcome to my website/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /digit recognizer - backend ai/i }));
+    const digitRecognizerCard = screen.getByText(/digit recognizer/i).closest("button");
+    expect(digitRecognizerCard).not.toBeNull();
+    fireEvent.click(digitRecognizerCard);
 
     expect(await screen.findByText(/digit recognizer panel mock/i)).toBeInTheDocument();
   });

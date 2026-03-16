@@ -1,125 +1,12 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { InlineMath } from "react-katex";
-import "katex/dist/katex.min.css";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./projects/lagrangian/LagrangianPanel"));
 const DigitRecognizerPanel = lazy(() => import("./projects/digit-recognizer/DigitRecognizerPanel"));
 const DinoSkillPanel = lazy(() => import("./projects/dino/DinoSkillPanel"));
 const PublicationPanel = lazy(() => import("./projects/publications/PublicationPanel"));
-const linkedInCertificationsUrl = "https://www.linkedin.com/in/remi-rossello/details/certifications/";
-
-const certificationItems = [
-  {
-    section: "Engineering",
-    title: "Engineering Degree",
-    issuer: "École des Mines de Nancy",
-    date: "Issued 2024",
-    diplomaImage: "/assets/images/engineering-diploma.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Introduction to Scala Course",
-    issuer: "DataCamp",
-    date: "Issued Feb 2026",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=datacamp.com",
-    credentialUrl:
-      "https://www.datacamp.com/completed/statement-of-accomplishment/course/1056fcbaccaf5269242357074ab325a89de9f97c",
-    diplomaImage: "/assets/images/scala-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Learn Git: Introduction Course",
-    issuer: "Codecademy",
-    date: "Issued Dec 2025",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=codecademy.com",
-    credentialUrl: "https://www.codecademy.com/profiles/RosselloRemi/certificates/53f1ee480e524cd7b329b5854507c089",
-    diplomaImage: "/assets/images/git-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Certification - Ada Programming Language",
-    issuer: "Udemy",
-    date: "Issued Dec 2025",
-    credentialId: "UC-ea7a7b27-1c86-44b8-a4c3-32f55de55dea719e",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=udemy.com",
-    credentialUrl: "https://www.udemy.com/certificate/UC-ea7a7b27-1c86-44b8-a4c3-32f55dea719e/",
-    diplomaImage: "/assets/images/ada-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Learn TypeScript Course",
-    issuer: "Codecademy",
-    date: "Issued Dec 2025",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=codecademy.com",
-    credentialUrl: "https://www.codecademy.com/profiles/RosselloRemi/certificates/56fb1e71303e37b643bb1905f31c8a09",
-    diplomaImage: "/assets/images/typescript-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Intro to Cloud Computing Course",
-    issuer: "Codecademy",
-    date: "Issued Nov 2025",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=codecademy.com",
-    credentialUrl: "https://www.codecademy.com/profiles/RosselloRemi/certificates/1353857e7ad5c1d0d578073e0d5e31e4",
-    diplomaImage: "/assets/images/cloud-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Full-Stack Development",
-    issuer: "Mimo",
-    date: "Issued Nov 2025",
-    credentialId: "09ec10ed-260c-4d8c-874c-8264c4d1d0d8",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=mimo.org",
-    credentialUrl: "https://www.virtualbadge.io/certificate-validator?credential=09ec10ed-260c-4d8c-874c-8264c4d1d0d8",
-    diplomaImage: "/assets/images/full-stack-certif.png",
-  },
-  {
-    section: "Humanities",
-    title: "IELTS - C1 level",
-    issuer: "British Council",
-    date: "Issued Jul 2022 · Expires Jul 2024",
-    credentialId: "A3-FR585-S-7501954",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=britishcouncil.org",
-    credentialUrl: linkedInCertificationsUrl,
-  },
-  {
-    section: "Humanities",
-    title: "Greek and Roman Mythology MOOC",
-    issuer: "University of Pennsylvania",
-    date: "Issued Jun 2022",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=upenn.edu",
-    credentialUrl: linkedInCertificationsUrl,
-  },
-  {
-    section: "Humanities",
-    title: "Human Behavioral Biology (2010 Lecture Series)",
-    issuer: "Stanford University (Robert Sapolsky)",
-    date: "2010",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=stanford.edu",
-    credentialUrl: "https://www.youtube.com/playlist?list=PL848F2368C90DDC3D",
-    linkLabel: "Youtube link",
-  },
-  {
-    section: "Humanities",
-    title: "MOOC Gestion de Projet, Attestation session 18 Parcours Classique",
-    issuer: "MOOC Gestion de Projet",
-    date: "Issued Dec 2021 · Expires Dec 2024",
-    credentialId: "GdP18a-MiAyndUyC",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=gestiondeprojet.pm",
-    credentialUrl: linkedInCertificationsUrl,
-    diplomaImage: "/assets/images/gestion-projet-certif.png",
-  },
-  {
-    section: "Computer Science",
-    title: "Elements of AI (collaboration with Reaktor)",
-    issuer: "University of Helsinki",
-    date: "Issued Mar 2019",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=helsinki.fi",
-    credentialUrl: "https://certificates.mooc.fi/validate/9authjljnwq",
-    diplomaImage: "/assets/images/AI-certif.png",
-  },
-];
+const ProjectsOverview = lazy(() => import("./tabs/projects/ProjectsOverview"));
+const CredentialsTab = lazy(() => import("./tabs/credentials/CredentialsTab"));
 
 const latestNewsItems = [
   {
@@ -140,9 +27,8 @@ const latestNewsItems = [
     id: "lagrangian",
     title: "Lagrangian explorer",
     status: "In progress",
-    date: "17 fevrier 2026",
+    date: "17 february 2026",
     sortDate: "2026-02-17",
-    previewMath: String.raw`\mathcal{L}_{SM}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+i\bar{\psi}\gamma^\mu D_\mu\psi-\left(y\bar{\psi}_L H\psi_R+h.c.\right)+|D_\mu H|^2-V(H)`,
   },
 ].sort((leftItem, rightItem) => rightItem.sortDate.localeCompare(leftItem.sortDate));
 
@@ -161,27 +47,6 @@ const aboutCvOptions = [
   },
 ];
 
-const projectSections = [
-  {
-    title: "Interactive",
-    items: [
-      { id: "lagrangian", title: "Lagrangian explorer", status: "In progress" },
-      { id: "backend-test", title: "Digit recognizer - backend AI", status: "Available" },
-      { id: "dino-skill", title: "Agent Skill: Dino Game", status: "Available" },
-      { id: "field-catalog", title: "Field catalog", status: "Upcoming" },
-      { id: "computer-roadmap", title: "The ultimate computer roadmap", status: "Upcoming" },
-    ],
-  },
-  {
-    title: "Publications",
-    items: [
-      { id: "publication-lunar-geology", title: "Lunar geology", status: "Published" },
-      { id: "publication-spintronics", title: "Spintronics", status: "Published" },
-      { id: "publication-spectroscopy", title: "Spectroscopy", status: "Published" },
-    ],
-  },
-];
-
 /**
  * Root frontend component with tab-based navigation.
  * @returns {JSX.Element} Main application layout.
@@ -189,7 +54,6 @@ const projectSections = [
 function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [activeProject, setActiveProject] = useState(null);
-  const [selectedCertification, setSelectedCertification] = useState(null);
   const [aboutTrack, setAboutTrack] = useState("engineering");
 
   const tabs = [
@@ -198,10 +62,6 @@ function App() {
     { id: "certifications", label: "Credentials" },
     { id: "projects", label: "Projects" },
   ];
-  const certificationSections = ["Engineering", "Computer Science", "Humanities"];
-  const canShowVerificationLink =
-    selectedCertification?.credentialUrl && selectedCertification.credentialUrl !== linkedInCertificationsUrl;
-  const selectedLinkLabel = selectedCertification?.linkLabel || "Verify credential";
   const selectedAboutCv = aboutCvOptions.find((option) => option.id === aboutTrack) || aboutCvOptions[0];
   const selectedAboutPdf = selectedAboutCv.pdfUrl;
   const selectedAboutPdfPreview = `${selectedAboutPdf}#view=FitH&zoom=page-width&toolbar=0&navpanes=0`;
@@ -267,9 +127,7 @@ function App() {
                       </span>
                       <span className="home-panel-card-status">{item.status}</span>
                       {item.previewMath && (
-                        <span className="home-panel-preview-math" aria-hidden="true">
-                          <InlineMath math={item.previewMath} />
-                        </span>
+                        <span className="home-panel-preview-math" aria-hidden="true">{item.previewMath}</span>
                       )}
                       <span className="home-panel-card-link">Open in Projects →</span>
                     </button>
@@ -283,10 +141,10 @@ function App() {
         {activeTab === "about" && (
           <section id="panel-about" role="tabpanel" aria-labelledby="tab-about">
             <h1 className="content-title">About</h1>
-            <div className="about-top-media">
-              <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
-            </div>
             <section className="about-story" aria-label="About introduction">
+              <div className="about-top-media">
+                <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
+              </div>
               <h2 className="about-story-title">Hi.</h2>
               <p className="about-story-text">
                 My name is Rémi Rossello, I come from Vence, a small but beautiful town in the French Riviera. Growing
@@ -375,30 +233,9 @@ function App() {
         {activeTab === "projects" && (
           <section id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
             {!activeProject && (
-              <>
-                <h1 className="content-title">Projects</h1>
-                <div className="projects-sections">
-                  {projectSections.map((section) => (
-                    <section className="projects-section" key={section.title} aria-label={section.title}>
-                      <h2 className="projects-section-title">{section.title}</h2>
-                      <div className="projects-grid" aria-label={`${section.title} projects`}>
-                        {section.items.map((project) => (
-                          <button
-                            className="certification-card certification-card-button project-card"
-                            key={project.id}
-                            type="button"
-                            onClick={() => setActiveProject(project.id)}
-                          >
-                            <p className="certification-issuer">{section.title}</p>
-                            <h3 className="certification-title">{project.title}</h3>
-                            <p className="certification-date">{project.status}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                  ))}
-                </div>
-              </>
+              <Suspense fallback={<p className="project-loading">Loading projects...</p>}>
+                <ProjectsOverview onSelectProject={setActiveProject} />
+              </Suspense>
             )}
 
             {activeProject && (
@@ -451,103 +288,9 @@ function App() {
         )}
 
         {activeTab === "certifications" && (
-          <section id="panel-certifications" role="tabpanel" aria-labelledby="tab-certifications">
-            <h1 className="content-title">Credentials</h1>
-
-            {selectedCertification ? (
-              <div className="certification-viewer">
-                <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
-                  ← Back to grid
-                </button>
-
-                <div className="certification-viewer-head">
-                  {selectedCertification.logoUrl && (
-                    <img className="certification-logo" src={selectedCertification.logoUrl} alt={selectedCertification.issuer} />
-                  )}
-                  <div>
-                    <h2>{selectedCertification.title}</h2>
-                    <p className="certification-issuer">{selectedCertification.issuer}</p>
-                    {selectedCertification.date && <p className="certification-date">{selectedCertification.date}</p>}
-                    {selectedCertification.credentialId && (
-                      <p className="certification-id">Credential ID: {selectedCertification.credentialId}</p>
-                    )}
-                  </div>
-                </div>
-
-                {selectedCertification.diplomaImage ? (
-                  <div className="certification-image-wrap">
-                    <img
-                      className="certification-image"
-                      src={selectedCertification.diplomaImage}
-                      alt={`${selectedCertification.title} diploma`}
-                    />
-
-                    {canShowVerificationLink && (
-                      <a
-                        className="button button-secondary certification-link"
-                        href={selectedCertification.credentialUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {selectedLinkLabel}
-                      </a>
-                    )}
-                  </div>
-                ) : (
-                  canShowVerificationLink && (
-                    <a
-                      className="button button-secondary certification-link"
-                      href={selectedCertification.credentialUrl || linkedInCertificationsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {selectedLinkLabel}
-                    </a>
-                  )
-                )}
-              </div>
-            ) : certificationItems.length === 0 ? (
-              <p className="subtitle certifications-empty">
-                LinkedIn blocks automated extraction here. Share your certification list and I can populate this grid
-                instantly.
-              </p>
-            ) : (
-              <div className="certifications-sections">
-                {certificationSections.map((sectionTitle) => {
-                  const sectionItems = certificationItems.filter((certification) => certification.section === sectionTitle);
-                  if (sectionItems.length === 0) {
-                    return null;
-                  }
-
-                  return (
-                    <section className="certifications-section" key={sectionTitle} aria-label={sectionTitle}>
-                      <h2 className="certifications-section-title">{sectionTitle}</h2>
-                      <div className="certifications-grid" aria-label={`${sectionTitle} credentials`}>
-                        {sectionItems.map((certification) => (
-                          <button
-                            className="certification-card certification-card-button"
-                            key={`${certification.title}-${certification.issuer}`}
-                            type="button"
-                            onClick={() => setSelectedCertification(certification)}
-                          >
-                            <div className="certification-card-head">
-                              {certification.logoUrl && (
-                                <img className="certification-logo" src={certification.logoUrl} alt={certification.issuer} />
-                              )}
-                              <p className="certification-issuer">{certification.issuer}</p>
-                            </div>
-                            <h3 className="certification-title">{certification.title}</h3>
-                            {certification.date && <p className="certification-date">{certification.date}</p>}
-                            {certification.credentialId && <p className="certification-id">Credential ID: {certification.credentialId}</p>}
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
-          </section>
+          <Suspense fallback={<p className="project-loading">Loading credentials...</p>}>
+            <CredentialsTab />
+          </Suspense>
         )}
       </section>
     </main>
