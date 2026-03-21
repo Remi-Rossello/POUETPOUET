@@ -43,14 +43,12 @@ const latestNewsItems = [
 const aboutCvOptions = [
   {
     id: "engineering",
-    label: "Engineering CV",
-    subtitle: "Aerospace & materials track",
+    label: "Materials & Aerospace CV",
     pdfUrl: "/assets/docs/Rossello_CV_aerospace.pdf",
   },
   {
     id: "software",
     label: "Software CV",
-    subtitle: "Software engineering track",
     pdfUrl: "/assets/docs/Rossello_CV_Software.pdf",
   },
 ];
@@ -206,7 +204,6 @@ function App() {
                   aria-controls="about-cv-panel"
                 >
                   <span className="about-cv-card-title">{option.label}</span>
-                  <span className="about-cv-card-subtitle">{option.subtitle}</span>
                 </button>
               ))}
             </div>
