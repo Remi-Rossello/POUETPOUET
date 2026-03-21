@@ -12,7 +12,7 @@ export const projectSections = [
       {
         id: "field-catalog",
         title: "Field catalog",
-        status: "Available",
+        status: "In progress",
         imageUrl: "/assets/images/projects/field-catalog.jpg",
       },
     ],
@@ -22,7 +22,7 @@ export const projectSections = [
     items: [
       {
         id: "backend-test",
-        title: "Digit recognizer - backend AI",
+        title: "Backend Digit recognizer",
         status: "Available",
         imageUrl: "/assets/images/projects/digit-recognizer.jpg",
       },
