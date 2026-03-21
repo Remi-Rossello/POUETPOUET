@@ -572,7 +572,7 @@ function FieldCatalogPanel() {
           <span className="field-phase-badge">Experimental</span>
           <span className="field-phase-copy">
             <span className="field-phase-title">
-              {isElectroweakRestored ? "Electroweak symmetry restored !" : "Break electroweak symmetry"}
+              {isElectroweakRestored ? "Electroweak symmetry restored !" : "Restore electroweak symmetry"}
             </span>
             <span className="field-phase-subtitle">
               {isElectroweakRestored
@@ -584,7 +584,7 @@ function FieldCatalogPanel() {
             type="checkbox"
             checked={isElectroweakRestored}
             onChange={() => setIsElectroweakRestored((value) => !value)}
-            aria-label={isElectroweakRestored ? "Electroweak symmetry restored !" : "Break electroweak symmetry"}
+            aria-label={isElectroweakRestored ? "Electroweak symmetry restored !" : "Restore electroweak symmetry"}
           />
         </label>
       </div>
