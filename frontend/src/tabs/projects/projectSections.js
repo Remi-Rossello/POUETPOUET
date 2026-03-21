@@ -7,11 +7,12 @@ export const projectSections = [
         title: "Lagrangian explorer",
         status: "In progress",
         imageUrl: "/assets/images/projects/lagrangian.jpg",
+        imageCredit: "Credit: Symmetry magazine",
       },
       {
         id: "field-catalog",
         title: "Field catalog",
-        status: "Upcoming",
+        status: "Available",
         imageUrl: "/assets/images/projects/field-catalog.jpg",
       },
     ],

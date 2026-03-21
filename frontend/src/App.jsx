@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./projects/lagrangian/LagrangianPanel"));
+const FieldCatalogPanel = lazy(() => import("./projects/field-catalog/FieldCatalogPanel"));
 const DigitRecognizerPanel = lazy(() => import("./projects/digit-recognizer/DigitRecognizerPanel"));
 const DinoSkillPanel = lazy(() => import("./projects/dino/DinoSkillPanel"));
 const PublicationPanel = lazy(() => import("./projects/publications/PublicationPanel"));
@@ -10,24 +11,31 @@ const CredentialsTab = lazy(() => import("./tabs/credentials/CredentialsTab"));
 
 const latestNewsItems = [
   {
+    id: "field-catalog",
+    title: "Field catalog",
+    status: "In progress",
+    date: "March 21st 2026",
+    sortDate: "2026-03-21",
+  },
+  {
     id: "dino-skill",
     title: "Agent Skill: Dino Game",
     status: "Available",
-    date: "12 mars 2026",
+    date: "March 12th 2026",
     sortDate: "2026-03-12",
   },
   {
     id: "backend-test",
     title: "Digit recognizer",
     status: "Available",
-    date: "12 mars 2026",
+    date: "March 12th 2026",
     sortDate: "2026-03-12",
   },
   {
     id: "lagrangian",
     title: "Lagrangian explorer",
     status: "In progress",
-    date: "17 february 2026",
+    date: "February 17th 2026",
     sortDate: "2026-02-17",
   },
 ].sort((leftItem, rightItem) => rightItem.sortDate.localeCompare(leftItem.sortDate));
@@ -101,11 +109,6 @@ function App() {
                   <button className="home-panel-card" type="button" onClick={() => openProjectTab("computer-roadmap")}>
                     <span className="home-panel-card-title">The ultimate computer roadmap</span>
                     <span className="home-panel-card-status">Planned</span>
-                    <span className="home-panel-card-link">Open in Projects →</span>
-                  </button>
-                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("field-catalog")}>
-                    <span className="home-panel-card-title">Field catalog</span>
-                    <span className="home-panel-card-status">Upcoming</span>
                     <span className="home-panel-card-link">Open in Projects →</span>
                   </button>
                 </div>
@@ -254,7 +257,7 @@ function App() {
                   {activeProject === "dino-skill" && <DinoSkillPanel />}
 
                   {activeProject === "field-catalog" && (
-                    <p className="project-loading">Upcoming</p>
+                    <FieldCatalogPanel />
                   )}
 
                   {activeProject === "computer-roadmap" && (

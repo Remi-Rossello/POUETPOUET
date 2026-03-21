@@ -1,0 +1,522 @@
+.field-catalog-panel {
+  text-align: left;
+}
+
+.field-catalog-intro {
+  margin: 0.4rem 0 1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  color: var(--text-soft-strong);
+  line-height: 1.62;
+  font-size: 1.03rem;
+}
+
+.field-catalog-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.95rem;
+}
+
+.field-phase-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: min(100%, 640px);
+  padding: 0.78rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--field-accent) 38%, var(--border));
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--field-accent) 20%, transparent), transparent 48%),
+    linear-gradient(145deg, color-mix(in srgb, var(--field-accent) 12%, rgba(11, 18, 30, 0.92)), rgba(10, 15, 25, 0.92));
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.field-phase-badge {
+  flex: 0 0 auto;
+  padding: 0.28rem 0.48rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--field-accent) 22%, transparent);
+  color: color-mix(in srgb, var(--field-accent) 72%, #ffffff);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field-phase-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.field-phase-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.field-phase-subtitle {
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.field-phase-toggle input[type="checkbox"] {
+  margin-left: auto;
+  flex: 0 0 auto;
+  appearance: none;
+  width: 42px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid color-mix(in srgb, var(--field-accent) 42%, var(--border));
+  position: relative;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.field-phase-toggle input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-soft);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.field-phase-toggle input[type="checkbox"]:checked {
+  background: color-mix(in srgb, var(--field-accent) 36%, rgba(255, 255, 255, 0.1));
+  border-color: color-mix(in srgb, var(--field-accent) 58%, var(--border-strong));
+}
+
+.field-phase-toggle input[type="checkbox"]:checked::after {
+  transform: translateX(20px);
+  background: var(--field-accent);
+}
+
+/* ── Main table: fermions left, bosons right ─────────────────────── */
+.field-catalog-table {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 0.95rem;
+  align-items: start;
+}
+
+.field-catalog-fermions,
+.field-catalog-bosons {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-alt) 86%, transparent);
+  padding: 0.7rem;
+}
+
+/* ── Fermion 3-column generation grid ─────────────────────────────
+   3 columns (one per generation), 3 rows:
+     row 1 = charged lepton
+     row 2 = neutrino
+     row 3 = quark pair (two cards stacked)                       */
+.fermion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.62rem;
+}
+
+.fermion-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.fermion-cell .field-card {
+  width: 100%;
+}
+
+.fermion-cell.quark-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+/* ── Boson vertical stack ─────────────────────────────────────── */
+.boson-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.62rem;
+}
+
+.boson-row {
+  display: flex;
+  gap: 0.62rem;
+}
+
+.boson-row.is-single .field-card {
+  max-width: calc(50% - 0.31rem);
+}
+
+.boson-row .field-card {
+  flex: 1;
+}
+
+.field-catalog-group-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-soft);
+}
+
+.field-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 118px;
+  padding: 0.72rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--field-accent) 38%, var(--border));
+  background:
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--field-accent) 24%, transparent), transparent 52%),
+    linear-gradient(155deg, color-mix(in srgb, var(--field-accent) 16%, rgba(12, 20, 34, 0.92)), rgba(10, 16, 28, 0.9));
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.field-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--field-accent) 58%, var(--border-strong));
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.field-card.is-active {
+  border-color: color-mix(in srgb, var(--field-accent) 78%, #ffffff 12%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--field-accent) 62%, transparent),
+    0 10px 20px rgba(0, 0, 0, 0.24);
+}
+
+.field-card-symbol {
+  font-size: 2.35rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--field-accent) 64%, #f8fbff);
+  line-height: 1;
+}
+
+.field-card-symbol .katex {
+  font-size: 1em;
+}
+
+.field-card-name {
+  position: absolute;
+  top: 0.52rem;
+  left: 0.6rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-soft-strong);
+  font-weight: 600;
+}
+
+.field-profile {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  padding: 0.85rem;
+}
+
+.field-profile-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(6, 10, 16, 0.66);
+  backdrop-filter: blur(5px);
+}
+
+.field-profile-modal {
+  width: min(920px, calc(100vw - 1.5rem));
+  max-height: calc(100vh - 1.5rem);
+  overflow-y: auto;
+  position: relative;
+  animation: fieldProfilePop 360ms cubic-bezier(0.23, 0.98, 0.27, 1);
+}
+
+.field-profile-close {
+  position: absolute;
+  top: 0.46rem;
+  right: 0.52rem;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--field-accent) 45%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--field-accent) 20%, rgba(15, 20, 33, 0.88));
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.field-profile-close:hover {
+  border-color: color-mix(in srgb, var(--field-accent) 62%, var(--border-strong));
+  transform: scale(1.04);
+}
+
+.field-profile-head {
+  padding: 0.72rem 0.82rem;
+  margin-bottom: 0.68rem;
+  text-align: center;
+}
+
+.field-profile-family {
+  margin: 0;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-soft);
+}
+
+.field-profile-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.36rem;
+}
+
+.field-profile-section {
+  margin-bottom: 0.58rem;
+  border: 1px solid color-mix(in srgb, var(--field-accent) 34%, var(--border));
+  border-radius: 8px;
+  background: rgba(12, 19, 31, 0.48);
+  padding: 0.58rem 0.72rem;
+}
+
+
+
+.field-profile-section:last-child {
+  margin-bottom: 0;
+}
+
+.field-profile-section h3 {
+  margin: 0 0 0.42rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--field-accent) 62%, var(--text-soft));
+}
+
+.field-profile-section .katex-display {
+  margin: 0.22rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.field-profile-symmetry-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(108px, 130px) minmax(0, 1fr);
+  gap: 0.34rem 0.65rem;
+  align-items: start;
+}
+
+.field-profile-symmetry-grid dt {
+  margin: 0;
+  font-size: 0.67rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--field-accent) 56%, var(--text-soft));
+}
+
+.field-profile-symmetry-grid dd {
+  margin: 0;
+  color: var(--text-soft-strong);
+  line-height: 1.52;
+}
+
+.field-profile-symmetry-grid dd .katex-display {
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Section header with inline toggle ───────────────────────────── */
+.field-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.field-section-header h3 {
+  margin-bottom: 0;
+}
+
+.field-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  cursor: pointer;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-soft);
+  user-select: none;
+}
+
+.field-toggle input[type="checkbox"] {
+  appearance: none;
+  width: 28px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--field-accent) 36%, var(--border));
+  position: relative;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.field-toggle input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-soft);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.field-toggle input[type="checkbox"]:checked {
+  background: color-mix(in srgb, var(--field-accent) 40%, rgba(255, 255, 255, 0.08));
+}
+
+.field-toggle input[type="checkbox"]:checked::after {
+  transform: translateX(14px);
+  background: var(--field-accent);
+}
+
+:root[data-theme="light"] .field-toggle input[type="checkbox"] {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .field-toggle input[type="checkbox"]:checked {
+  background: color-mix(in srgb, var(--field-accent) 30%, rgba(0, 0, 0, 0.06));
+}
+
+.field-catalog-panel {
+  --field-accent-lepton: #7fb7ff;
+  --field-accent-neutrino: #69d2c4;
+  --field-accent-quark: #ffb47f;
+  --field-accent-gauge: #ff8ac8;
+  --field-accent-scalar: #d8acff;
+}
+
+:root[data-theme="light"] .field-card {
+  color: #1f2b3f;
+  background:
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--field-accent) 24%, transparent), transparent 54%),
+    linear-gradient(160deg, color-mix(in srgb, var(--field-accent) 20%, #fff9ef), #f6ecdd);
+}
+
+:root[data-theme="light"] .field-phase-toggle {
+  background:
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--field-accent) 16%, transparent), transparent 48%),
+    linear-gradient(160deg, color-mix(in srgb, var(--field-accent) 16%, #fff7ed), #fcf3e7);
+  color: #1f2b3f;
+}
+
+:root[data-theme="light"] .field-phase-subtitle {
+  color: #5e697d;
+}
+
+:root[data-theme="light"] .field-phase-toggle input[type="checkbox"] {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .field-phase-toggle input[type="checkbox"]:checked {
+  background: color-mix(in srgb, var(--field-accent) 28%, rgba(0, 0, 0, 0.06));
+}
+
+:root[data-theme="light"] .field-card-name {
+  color: #4f5f78;
+}
+
+:root[data-theme="light"] .field-profile {
+  background: #fffaf0;
+}
+
+:root[data-theme="light"] .field-catalog-fermions,
+:root[data-theme="light"] .field-catalog-bosons {
+  background: rgba(255, 252, 246, 0.94);
+}
+
+:root[data-theme="light"] .field-profile-close {
+  background: color-mix(in srgb, var(--field-accent) 18%, #fff8ef);
+  color: #2f394a;
+}
+
+
+
+:root[data-theme="light"] .field-profile-family {
+  color: #6c5f4f;
+}
+
+:root[data-theme="light"] .field-profile-section {
+  background: rgba(255, 252, 245, 0.92);
+}
+
+@media (max-width: 980px) {
+  .field-catalog-table {
+    grid-template-columns: 1fr;
+  }
+
+  .field-phase-toggle {
+    width: 100%;
+  }
+
+  .fermion-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .field-profile-modal {
+    width: calc(100vw - 0.9rem);
+    max-height: calc(100vh - 0.9rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .field-phase-toggle {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .field-phase-toggle input[type="checkbox"] {
+    margin-left: 0;
+  }
+
+  .boson-row.is-single .field-card {
+    max-width: none;
+  }
+}
+
+@keyframes fieldProfilePop {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.94) rotateX(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0);
+  }
+}

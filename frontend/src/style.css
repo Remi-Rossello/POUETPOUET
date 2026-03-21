@@ -1030,6 +1030,24 @@ h1 {
   background-repeat: no-repeat;
 }
 
+.project-card-credit {
+  position: absolute;
+  left: 0.52rem;
+  right: 0.52rem;
+  bottom: 0.42rem;
+  z-index: 1;
+  padding: 0.18rem 0.34rem;
+  border-radius: 6px;
+  background: rgba(8, 12, 19, 0.46);
+  color: rgba(236, 244, 255, 0.72);
+  text-align: right;
+  font-size: 0.57rem;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(2px);
+}
+
 .project-card-status {
   display: inline-flex;
   align-items: center;
@@ -1095,6 +1113,11 @@ h1 {
   background: rgba(248, 243, 234, 0.92);
   border-color: rgba(149, 129, 94, 0.18);
   color: #5e4d39;
+}
+
+:root[data-theme="light"] .project-card-credit {
+  background: rgba(245, 238, 227, 0.78);
+  color: rgba(94, 77, 57, 0.82);
 }
 
 :root[data-theme="light"] .project-card-title {

@@ -24,6 +24,7 @@ function ProjectsOverview({ onSelectProject }) {
                 >
                   <span className="project-card-frame">
                     <span className="project-card-image" aria-hidden="true" />
+                    {project.imageCredit && <span className="project-card-credit">{project.imageCredit}</span>}
                   </span>
                   <span className="project-card-status">{project.status}</span>
                   <h3 className="certification-title project-card-title">{project.title}</h3>
