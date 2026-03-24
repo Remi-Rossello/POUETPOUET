@@ -528,7 +528,7 @@ function LagrangianPanel() {
         <p className="project-body-text">
           Welcome to the Lagrangian explorer Demo ! Interact with the most fundamental quantity of all current particle
           physics: the complete Standard Model Lagrangian density. Click the terms to expand them and understand how
-          quantum fields for matter and force particles interact and evolve.
+          quantum fields for matter and force particles interact and evolve. DISCLAIMER: WORK IN PROGRESS, SOME FEATURES MAY NOT BE ACCURATE
         </p>
         <button
           className="button button-secondary project-show-more-toggle"

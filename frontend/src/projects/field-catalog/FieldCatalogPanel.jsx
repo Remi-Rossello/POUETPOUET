@@ -564,7 +564,7 @@ function FieldCatalogPanel() {
       <h1 className="content-title">Field catalog</h1>
       <p className="field-catalog-intro">
         Explore the Standard Model particles as interactive field cards. Click one card to open its field profile,
-        from field structure to free dynamics and gauge symmetry.
+        from field structure to free dynamics and gauge symmetry. DISCLAIMER: WORK IN PROGRESS, SOME FEATURES MAY NOT BE ACCURATE
       </p>
 
       <div className="field-catalog-toolbar">
