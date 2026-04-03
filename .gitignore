@@ -2,10 +2,12 @@
 
 *.tmp
 *.log
+*.db
 
 node_modules
 dist
 build
+
 
 # Backend local environment file
 backend/.env

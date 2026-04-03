@@ -57,10 +57,29 @@ const aboutCvOptions = [
  * Root frontend component with tab-based navigation.
  * @returns {JSX.Element} Main application layout.
  */
+const BACKEND_BASE_URL = import.meta.env.DEV
+  ? "http://localhost:3000"
+  : "https://backend-production-rossello.up.railway.app";
+
 function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [activeProject, setActiveProject] = useState(null);
   const [aboutTrack, setAboutTrack] = useState("engineering");
+  const [visits, setVisits] = useState(null);
+
+  useEffect(() => {
+    fetch(`${BACKEND_BASE_URL}/api/visits`)
+      .then((r) => r.json())
+      .then((data) => setVisits(data.visits))
+      .catch(() => {});
+  }, []);
+
+  const handleVisitClick = () => {
+    fetch(`${BACKEND_BASE_URL}/api/visits`, { method: 'POST' })
+      .then((r) => r.json())
+      .then((data) => setVisits(data.visits))
+      .catch(() => {});
+  };
 
   const tabs = [
     { id: "home", label: "Home" },
@@ -135,6 +154,16 @@ function App() {
                   ))}
                 </div>
               </section>
+            </div>
+            <div className="home-visit-counter">
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={handleVisitClick}
+                aria-label="Increment visit counter"
+              >
+                👋 {visits !== null ? visits : "…"}
+              </button>
             </div>
           </section>
         )}

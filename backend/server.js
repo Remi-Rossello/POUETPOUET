@@ -3,11 +3,14 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const ort = require('onnxruntime-node');
+const { db, initDatabase } = require('./database');
 
 const MODEL_URL = 'https://media.githubusercontent.com/media/onnx/models/main/validated/vision/classification/mnist/model/mnist-8.onnx';
 const MODEL_LOCAL_PATH = path.join(__dirname, 'models', 'mnist-8.onnx');
 let sessionPromise;
 
+
+// SETUP: EXPRESS, CORS, PORT...
 function getFrontendOrigin() {
   if (process.env.FRONTEND_ORIGIN) {
     return process.env.FRONTEND_ORIGIN;
@@ -46,6 +49,7 @@ app.use(
   })
 );
 
+// FUNCTIONS
 function helloFromBackend() {
   const currentDate = new Date().toISOString().split('T')[0];
   return `Hello, Backend here, the current date is ${currentDate}`;
@@ -95,6 +99,7 @@ function validateGridPayload(grid) {
   );
 }
 
+// ROUTES
 app.get('/api/hello', (req, res) => {
   res.json({ message: helloFromBackend() });
 });
@@ -142,6 +147,27 @@ app.post('/api/predict-digit', async (req, res) => {
   }
 });
 
+
+app.get('/api/visits', (req, res) => {
+  db.get(`SELECT value FROM traffic WHERE key = 'visits'`, (err, row) => {
+    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
+    res.json({ visits: row ? row.value : 0 });
+  });
+});
+
+app.post('/api/visits', (req, res) => {
+  db.run(`UPDATE traffic SET value = value + 1 WHERE key = 'visits'`, function callback(err) {
+    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
+    db.get(`SELECT value FROM traffic WHERE key = 'visits'`, (err2, row) => {
+      if (err2) { res.status(500).json({ error: 'Database error.' }); return; }
+      res.json({ visits: row ? row.value : 0 });
+    });
+  });
+});
+
+
+// STARTUP
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  initDatabase();
 });
