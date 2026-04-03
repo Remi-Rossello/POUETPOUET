@@ -167,7 +167,16 @@ app.post('/api/visits', (req, res) => {
 
 
 // STARTUP
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   initDatabase();
+});
+
+// SIGTERM handling
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
