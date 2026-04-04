@@ -172,30 +172,13 @@ const server = app.listen(port, () => {
   initDatabase();
 });
 
-// SIGTERM handling (with timeout as advised by Railway's agent)
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully...');
-  const timeout = setTimeout(() => {
-    console.error('Graceful shutdown timed out, forcing exit.');
-    process.exit(0);
-  }, 5000);
-  timeout.unref();
-
+// SIGTERM and SIGINT handlers
+const shutdown = (signal) => {
+  console.log(`${signal} received, shutting down...`);
   server.close(() => {
-    console.log('HTTP server closed.');
-    db.close((err) => {
-      if (err) console.error('Error closing SQLite database:', err.message);
-      else console.log('SQLite connection closed.');
-      clearTimeout(timeout);
-      process.exit(0);
-    });
+    db.close(() => process.exit(0));
   });
-});
+};
 
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully...');
-  db.close((err) => {
-    if (err) console.error('Error closing SQLite database:', err.message);
-    process.exit(0);
-  });
-});
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
