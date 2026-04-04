@@ -172,10 +172,16 @@ const server = app.listen(port, () => {
   initDatabase();
 });
 
-// SIGTERM handling
+// SIGTERM handling (with timeout as advised by Railway's agent)
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully...');
+  const timeout = setTimeout(() => {
+    console.log('Forced shutdown');
+    process.exit(1);
+  }, 5000);
+  
   server.close(() => {
+    clearTimeout(timeout);
     console.log('Server closed');
     process.exit(0);
   });
