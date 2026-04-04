@@ -11,24 +11,15 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_C
 });
 
 function initDatabase() {
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS traffic (
-        key   TEXT PRIMARY KEY,
-        value INTEGER NOT NULL DEFAULT 0
-      )`,
-      (err) => {
-        if (err) console.error('Failed to initialise traffic table:', err.message);
-      }
-    );
-    db.run(
-      `INSERT OR IGNORE INTO traffic (key, value) VALUES ('visits', 0)`,
-      (err) => {
-        if (err) console.error('Failed to seed visits row:', err.message);
-        else console.log('Database initialised (traffic table ready).');
-      }
-    );
-  });
+  db.run(
+    `CREATE TABLE IF NOT EXISTS visitors (
+      ip TEXT PRIMARY KEY
+    )`,
+    (err) => {
+      if (err) console.error('Failed to initialise visitors table:', err.message);
+      else console.log('Database initialised (visitors table ready).');
+    }
+  );
 }
 
 module.exports = { db, initDatabase };

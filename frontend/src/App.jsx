@@ -67,20 +67,15 @@ function App() {
   const [aboutTrack, setAboutTrack] = useState("engineering");
   const [visits, setVisits] = useState(null);
 
+  // On mount, register a visit and fetch the total visit count from the backend.
   useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/api/visits`)
+    fetch(`${BACKEND_BASE_URL}/api/visits`, { method: 'POST' })
       .then((r) => r.json())
       .then((data) => setVisits(data.visits))
       .catch(() => {});
   }, []);
 
-  const handleVisitClick = () => {
-    fetch(`${BACKEND_BASE_URL}/api/visits`, { method: 'POST' })
-      .then((r) => r.json())
-      .then((data) => setVisits(data.visits))
-      .catch(() => {});
-  };
-
+  // Contants for the structure of the website
   const tabs = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
@@ -156,14 +151,9 @@ function App() {
               </section>
             </div>
             <div className="home-visit-counter">
-              <button
-                className="button button-secondary"
-                type="button"
-                onClick={handleVisitClick}
-                aria-label="Increment visit counter"
-              >
+              <span className="button button-secondary" aria-label="Unique visitors">
                 👋 {visits !== null ? visits : "…"}
-              </button>
+              </span>
             </div>
           </section>
         )}

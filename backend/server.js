@@ -99,6 +99,13 @@ function validateGridPayload(grid) {
   );
 }
 
+function getVisitorCount(res) {
+  db.get(`SELECT COUNT(*) AS count FROM visitors`, (err, row) => {
+    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
+    res.json({ visits: row ? row.count : 0 });
+  });
+}
+
 // ROUTES
 app.get('/api/hello', (req, res) => {
   res.json({ message: helloFromBackend() });
@@ -149,19 +156,14 @@ app.post('/api/predict-digit', async (req, res) => {
 
 
 app.get('/api/visits', (req, res) => {
-  db.get(`SELECT value FROM traffic WHERE key = 'visits'`, (err, row) => {
-    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
-    res.json({ visits: row ? row.value : 0 });
-  });
+  getVisitorCount(res);
 });
 
 app.post('/api/visits', (req, res) => {
-  db.run(`UPDATE traffic SET value = value + 1 WHERE key = 'visits'`, function callback(err) {
+  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  db.run(`INSERT OR IGNORE INTO visitors (ip) VALUES (?)`, [ip], (err) => {
     if (err) { res.status(500).json({ error: 'Database error.' }); return; }
-    db.get(`SELECT value FROM traffic WHERE key = 'visits'`, (err2, row) => {
-      if (err2) { res.status(500).json({ error: 'Database error.' }); return; }
-      res.json({ visits: row ? row.value : 0 });
-    });
+    getVisitorCount(res);
   });
 });
 
