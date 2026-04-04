@@ -31,7 +31,4 @@ function initDatabase() {
   });
 }
 
-process.on('exit', () => db.close());
-process.on('SIGINT', () => { db.close(); process.exit(0); });
-
 module.exports = { db, initDatabase };

@@ -176,13 +176,26 @@ const server = app.listen(port, () => {
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully...');
   const timeout = setTimeout(() => {
-    console.log('Forced shutdown');
-    process.exit(1);
+    console.error('Graceful shutdown timed out, forcing exit.');
+    process.exit(0);
   }, 5000);
-  
+  timeout.unref();
+
   server.close(() => {
-    clearTimeout(timeout);
-    console.log('Server closed');
+    console.log('HTTP server closed.');
+    db.close((err) => {
+      if (err) console.error('Error closing SQLite database:', err.message);
+      else console.log('SQLite connection closed.');
+      clearTimeout(timeout);
+      process.exit(0);
+    });
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully...');
+  db.close((err) => {
+    if (err) console.error('Error closing SQLite database:', err.message);
     process.exit(0);
   });
 });
