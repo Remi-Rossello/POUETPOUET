@@ -103,7 +103,7 @@ function getVisitorCount(res) {
   db.get(`SELECT COUNT(*) AS count FROM visitors`, (err, row) => {
     if (err) {
       console.error('getVisitorCount error:', err.message);
-      res.status(500).json({ error: 'Database error.' });
+      res.status(500).json({ error: 'Database error.', detail: err.message });
       return;
     }
     res.json({ visits: row ? row.count : 0 });
@@ -172,7 +172,7 @@ app.post('/api/visits', (req, res) => {
   db.run(`INSERT OR IGNORE INTO visitors (device_id) VALUES (?)`, [deviceId], (err) => {
     if (err) {
       console.error('POST /api/visits insert error:', err.message);
-      res.status(500).json({ error: 'Database error.' });
+      res.status(500).json({ error: 'Database error.', detail: err.message });
       return;
     }
     getVisitorCount(res);
