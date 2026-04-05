@@ -13,7 +13,7 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_C
 function initDatabase() {
   db.run(
     `CREATE TABLE IF NOT EXISTS visitors (
-      ip TEXT PRIMARY KEY
+      device_id TEXT PRIMARY KEY
     )`,
     (err) => {
       if (err) console.error('Failed to initialise visitors table:', err.message);

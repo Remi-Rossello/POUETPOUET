@@ -67,9 +67,18 @@ function App() {
   const [aboutTrack, setAboutTrack] = useState("engineering");
   const [visits, setVisits] = useState(null);
 
-  // On mount, register a visit and fetch the total visit count from the backend.
+  // On mount, register a visit using a persistent device ID stored in localStorage.
   useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/api/visits`, { method: 'POST' })
+    let deviceId = localStorage.getItem('visitor_id');
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem('visitor_id', deviceId);
+    }
+    fetch(`${BACKEND_BASE_URL}/api/visits`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceId }),
+    })
       .then((r) => r.json())
       .then((data) => setVisits(data.visits))
       .catch(() => {});
@@ -152,7 +161,7 @@ function App() {
             </div>
             <div className="home-visit-counter">
               <span className="button button-secondary" aria-label="Unique visitors">
-                👋 {visits !== null ? visits : "…"}
+                👋 Hi, visitor number {visits !== null ? visits : "…"}
               </span>
             </div>
           </section>

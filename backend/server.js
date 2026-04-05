@@ -160,8 +160,12 @@ app.get('/api/visits', (req, res) => {
 });
 
 app.post('/api/visits', (req, res) => {
-  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
-  db.run(`INSERT OR IGNORE INTO visitors (ip) VALUES (?)`, [ip], (err) => {
+  const { deviceId } = req.body || {};
+  if (!deviceId || typeof deviceId !== 'string' || deviceId.length > 64) {
+    res.status(400).json({ error: 'Invalid deviceId.' });
+    return;
+  }
+  db.run(`INSERT OR IGNORE INTO visitors (device_id) VALUES (?)`, [deviceId], (err) => {
     if (err) { res.status(500).json({ error: 'Database error.' }); return; }
     getVisitorCount(res);
   });
