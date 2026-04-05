@@ -101,7 +101,11 @@ function validateGridPayload(grid) {
 
 function getVisitorCount(res) {
   db.get(`SELECT COUNT(*) AS count FROM visitors`, (err, row) => {
-    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
+    if (err) {
+      console.error('getVisitorCount error:', err.message);
+      res.status(500).json({ error: 'Database error.' });
+      return;
+    }
     res.json({ visits: row ? row.count : 0 });
   });
 }
@@ -166,7 +170,11 @@ app.post('/api/visits', (req, res) => {
     return;
   }
   db.run(`INSERT OR IGNORE INTO visitors (device_id) VALUES (?)`, [deviceId], (err) => {
-    if (err) { res.status(500).json({ error: 'Database error.' }); return; }
+    if (err) {
+      console.error('POST /api/visits insert error:', err.message);
+      res.status(500).json({ error: 'Database error.' });
+      return;
+    }
     getVisitorCount(res);
   });
 });
