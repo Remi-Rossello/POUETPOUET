@@ -11,8 +11,8 @@ export const projectSections = [
       },
       {
         id: "field-catalog",
-        title: "Field catalog",
-        status: "Available",
+        title: "Standard Model Explorer",
+        status: "In progress",
         imageUrl: "/assets/images/projects/field-catalog.jpg",
       },
     ],

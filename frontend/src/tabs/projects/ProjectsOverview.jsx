@@ -4,9 +4,6 @@ function ProjectsOverview({ onSelectProject }) {
   return (
     <>
       <h1 className="content-title">Projects</h1>
-      <p className="projects-intro">
-        A curated wall of physics and computer science projects, arranged more like a gallery than a file list.
-      </p>
       <div className="projects-sections">
         {projectSections.map((section) => (
           <section className="projects-section" key={section.title} aria-label={section.title}>

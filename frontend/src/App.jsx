@@ -11,6 +11,14 @@ const CredentialsTab = lazy(() => import("./tabs/credentials/CredentialsTab"));
 
 const latestNewsItems = [
   {
+    id: "visitor-count",
+    title: "Live visitor counter",
+    status: "Available",
+    date: "April 5th 2026",
+    sortDate: "2026-04-05",
+    hint: "Check the bottom of this page",
+  },
+  {
     id: "field-catalog",
     title: "Field catalog",
     status: "In progress",
@@ -149,7 +157,8 @@ function App() {
                       key={item.id}
                       className="home-panel-card"
                       type="button"
-                      onClick={() => openProjectTab(item.id)}
+                      onClick={item.hint ? undefined : () => openProjectTab(item.id)}
+                      style={item.hint ? { cursor: "default" } : undefined}
                     >
                       <span className="home-panel-card-head">
                         <span className="home-panel-card-title">{item.title}</span>
@@ -159,7 +168,7 @@ function App() {
                       {item.previewMath && (
                         <span className="home-panel-preview-math" aria-hidden="true">{item.previewMath}</span>
                       )}
-                      <span className="home-panel-card-link">Open in Projects →</span>
+                      <span className="home-panel-card-link">{item.hint ?? "Open in Projects →"}</span>
                     </button>
                   ))}
                 </div>
@@ -167,7 +176,7 @@ function App() {
             </div>
             <div className="home-visit-counter">
               <span className="button button-secondary" aria-label="Unique visitors">
-                {visits ?? "…"} unique browsers have visited !
+                Fun fact: {visits ?? "…"} unique browsers have visited this website !
               </span>
               <span
                 className="visit-counter-info"
