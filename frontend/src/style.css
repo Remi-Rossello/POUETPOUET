@@ -476,6 +476,11 @@ a:focus-visible,
   user-select: none;
 }
 
+.home-visit-counter .button-secondary {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.24em;
