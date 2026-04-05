@@ -173,18 +173,22 @@ app.post('/api/visits', (req, res) => {
 
 
 // STARTUP
-const server = app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-  initDatabase();
-});
-
-// SIGTERM and SIGINT handlers
-const shutdown = (signal) => {
-  console.log(`${signal} received, shutting down...`);
-  server.close(() => {
-    db.close(() => process.exit(0));
+initDatabase().then(() => {
+  const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
   });
-};
 
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+  // SIGTERM and SIGINT handlers
+  const shutdown = (signal) => {
+    console.log(`${signal} received, shutting down...`);
+    server.close(() => {
+      db.close(() => process.exit(0));
+    });
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}).catch((err) => {
+  console.error('Failed to initialise database, aborting startup:', err.message);
+  process.exit(1);
+});

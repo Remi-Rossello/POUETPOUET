@@ -11,15 +11,22 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_C
 });
 
 function initDatabase() {
-  db.run(
-    `CREATE TABLE IF NOT EXISTS visitors (
-      device_id TEXT PRIMARY KEY
-    )`,
-    (err) => {
-      if (err) console.error('Failed to initialise visitors table:', err.message);
-      else console.log('Database initialised (visitors table ready).');
-    }
-  );
+  return new Promise((resolve, reject) => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS visitors (
+        device_id TEXT PRIMARY KEY
+      )`,
+      (err) => {
+        if (err) {
+          console.error('Failed to initialise visitors table:', err.message);
+          reject(err);
+        } else {
+          console.log('Database initialised (visitors table ready).');
+          resolve();
+        }
+      }
+    );
+  });
 }
 
 module.exports = { db, initDatabase };
