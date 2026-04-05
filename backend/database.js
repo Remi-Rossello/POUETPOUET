@@ -12,20 +12,23 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_C
 
 function initDatabase() {
   return new Promise((resolve, reject) => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS visitors (
-        device_id TEXT PRIMARY KEY
-      )`,
-      (err) => {
-        if (err) {
-          console.error('Failed to initialise visitors table:', err.message);
-          reject(err);
-        } else {
-          console.log('Database initialised (visitors table ready).');
-          resolve();
+    db.serialize(() => {
+      db.run(`DROP TABLE IF EXISTS visitors`, (err) => {
+        if (err) { console.error('Failed to drop visitors table:', err.message); reject(err); return; }
+      });
+      db.run(
+        `CREATE TABLE IF NOT EXISTS visitors (device_id TEXT PRIMARY KEY)`,
+        (err) => {
+          if (err) {
+            console.error('Failed to initialise visitors table:', err.message);
+            reject(err);
+          } else {
+            console.log('Database initialised (visitors table ready).');
+            resolve();
+          }
         }
-      }
-    );
+      );
+    });
   });
 }
 
