@@ -79,9 +79,15 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deviceId }),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data) => setVisits(data.visits))
-      .catch(() => {});
+      .catch((err) => {
+        console.error('Failed to register visit:', err);
+        setVisits('?');
+      });
   }, []);
 
   // Contants for the structure of the website
