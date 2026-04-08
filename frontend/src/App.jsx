@@ -198,24 +198,24 @@ function App() {
               </div>
               <h2 className="about-story-title">Hi.</h2>
               <p className="about-story-text">
-                My name is Rémi Rossello, I come from Vence, a small but beautiful town in the French Riviera. Growing
+                My name is Rémi Rossello, I come from Vence, a small but beautiful town on the French Riviera. Growing
                 up, I wanted to know exactly why we are here and how the universe works. When I found out it was too
                 hard, I began learning computer science instead ;) This website is part of the result.
               </p>
 
               <h2 className="about-story-title">Experiences</h2>
               <p className="about-story-text">
-                Following a math/physics formation, in 2024, I received my engineering diploma from the "École des
+                Following academic training in maths and physics, in 2024, I received my engineering diploma from the "École des
                 Mines" in Nancy, France, with a specialization in materials engineering. 
                 In the same year, I worked as an intern for OffWorld in Luxembourg, a space startup from the US
-                concentrating on the mining of space ressources, specifically Lunar water. There, I made use of both
+                concentrating on the mining of space resources, specifically Lunar water. There, I made use of both
                 materials science and programming skills for ESA-sponsored experiments. 
                 Then, I briefly joined the Cosmochemistry and Planetology team at the Petrological and Geochemical
                 Research Center (CRPG) in Nancy, France, again as in intern. With my tutor Jessica Flahaut and <abbr title="French national space agency">CNES</abbr>
-                engineer Nicolas Théret, we co-authored a scientific proceeding on the spectral identification of Lunar
+                 engineer Nicolas Théret, we co-authored a scientific proceeding on the spectral identification of Lunar
                 minerals thanks to scripts I had written in IDL. 
-                Both experiences where related to planned rover missions on the Moon, but OffWorld's mission was
-                scraped due to lack of funding. The scientific proceeding, however, was presented at the European Lunar
+                Both experiences were related to planned rover missions on the Moon, but sadly, OffWorld's mission was
+                scrapped due to lack of funding. The scientific proceeding, however, was presented at the European Lunar
                 Symposium 2025 in Munster, Germany.
               </p>
 
@@ -223,19 +223,19 @@ function App() {
               <p className="about-story-text">
                 During my years at school, I had learned how to code in Python, Caml, R, MATLAB, IDL... But we were
                 never taught exactly what the computer is <em>doing</em>. And so towards the end of my formation, I
-                sought out to understand in detail the mysterious and magical world of computers. 
+                sought to understand in detail the mysterious and magical world of computers. 
                 The starting point was NandGames, a game allowing one to build a CPU and RAM, level by level, from
                 transistors, to Nand gates, and then circuits, RAM, ALU, CPU, and finally binary instructions and
                 assembly scripts running on this home-made computer. 
-                Then, I learned more about assembly and C, reading "Operating systems in three easy pieces". Putting
+                Then, I learned more about real assembly and C, reading the classic "Operating systems in three easy pieces". Putting
                 this in practice, I installed Linux and experimented. The next chapter was getting certified in
-                full-stack developpment, html/css, js, ts, react, downloading VSCode, learning the good practices,
+                full-stack development, html/css, js, ts, react, downloading VSCode, learning the good practices,
                 using LLMs, learning how LLMs work...
               </p>
 
               <h2 className="about-story-title">What's next</h2>
               <p className="about-story-text">
-                Today, I'm working as a "math expert", writting and correcting math prompts for LLM RLHF training.
+                Today, I'm working as a "math expert", writing and correcting math prompts for LLM RLHF training.
                 The next step is to work in a more stimulating aerospace and/or software engineering role. Please hire
                 me 🙏
               </p>
