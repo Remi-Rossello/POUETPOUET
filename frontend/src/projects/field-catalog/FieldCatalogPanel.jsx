@@ -3,6 +3,28 @@ import { BlockMath, InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import "./field-catalog.css";
 
+// ── Resolve helper ───────────────────────────────────────────────────────────
+// Every displayable section (fieldStructure, lagrangian, equation) can branch
+// on ANY combination of toggle keys in ANY nesting order.  The resolver walks
+// the data tree, consuming whichever key matches at each level, and stops when
+// it hits a leaf (a string or a {math,name} object).  Keys that don't appear
+// at a given level are simply skipped, so existing data that only branches on
+// one axis keeps working unchanged.
+const _isLeaf = (v) =>
+  typeof v === "string" || (v != null && typeof v === "object" && "math" in v);
+
+function resolve(obj, keys) {
+  let node = obj;
+  const remaining = [...keys];
+  while (remaining.length > 0 && node != null && !_isLeaf(node)) {
+    const idx = remaining.findIndex((k) => k in node);
+    if (idx === -1) break;
+    node = node[remaining[idx]];
+    remaining.splice(idx, 1);
+  }
+  return node;
+}
+
 // ── Highlight helpers ────────────────────────────────────────────────────────
 // Each family gets a vivid color for field-symbol highlighting in equations.
 // We write the \color{} markup directly into every LaTeX string so there is
@@ -17,26 +39,36 @@ const C = {
 };
 
 // ── Lepton shared LaTeX (electron, muon, tau) ────────────────────────────────
-const leptonFieldStructure = String.raw`${C.L("\\psi")}=\begin{pmatrix}\psi_{L}\\ \psi_{R}\end{pmatrix}`;
-const leptonFieldStructureExpanded = String.raw`${C.L("\\psi")}=\begin{pmatrix}|\psi_{L,1}|\,e^{i\theta_{L,1}}\\ |\psi_{L,2}|\,e^{i\theta_{L,2}}\\ |\psi_{R,1}|\,e^{i\theta_{R,1}}\\ |\psi_{R,2}|\,e^{i\theta_{R,2}}\end{pmatrix}`;
+const leptonFieldStructure = String.raw`${C.L("\\psi")}=\begin{pmatrix}\varphi\\ \chi\end{pmatrix}`;
+const leptonFieldStructureExpanded = String.raw`${C.L("\\psi")}=\begin{pmatrix}|\varphi_1|\,e^{i\alpha_1}\\ |\varphi_2|\,e^{i\alpha_2}\\ |\chi_1|\,e^{i\beta_1}\\ |\chi_2|\,e^{i\beta_2}\end{pmatrix}`;
 const leptonFreeLagrangian = String.raw`\mathcal{L}_0=\bar{${C.L("\\psi")}}\left(i\gamma^\mu\partial_\mu-m\right)${C.L("\\psi")}`;
-const leptonNonRel = String.raw`i\partial_t${C.L("\\varphi")}=\left(-\frac{\nabla^2}{2m}+V\right)${C.L("\\varphi")}`;
+const leptonNonRel = String.raw`i\partial_t${C.L("\\varphi")}=-\frac{\nabla^2}{2m}${C.L("\\varphi")}`;
 const leptonRel = String.raw`\left(i\gamma^\mu\partial_\mu-m\right)${C.L("\\psi")}=0`;
+const leptonInteractingLagrangian = String.raw`\mathcal{L}=\bar{${C.L("\\psi")}}\left(i\gamma^\mu D_\mu-m\right)${C.L("\\psi")},\quad D_\mu=\partial_\mu+ieA_\mu`;
+const leptonInteractingNonRel = String.raw`i\partial_t${C.L("\\varphi")}=\left(\frac{(\mathbf{p}+e\mathbf{A})^2}{2m}-e\phi+V\right)${C.L("\\varphi")}`;
+const leptonInteractingRel = String.raw`\left(i\gamma^\mu D_\mu-m\right)${C.L("\\psi")}=0,\quad D_\mu=\partial_\mu+ieA_\mu`;
 
 // ── Neutrino shared LaTeX ────────────────────────────────────────────────────
-const neutrinoFieldStructureExpanded = String.raw`${C.N("\\nu")}=\begin{pmatrix}|\nu_{L,1}|\,e^{i\theta_{L,1}}\\ |\nu_{L,2}|\,e^{i\theta_{L,2}}\end{pmatrix}`;
-const neutrinoFreeLagrangian = String.raw`\mathcal{L}_0=\bar{${C.N("\\nu")}}\,i\gamma^\mu\partial_\mu${C.N("\\nu")}-\frac{m}{2}\left(\bar{${C.N("\\nu")}}^c${C.N("\\nu")}+\text{h.c.}\right)`;
-const neutrinoNonRel = String.raw`i\partial_t${C.N("\\chi")}\approx\left(-\frac{\nabla^2}{2m}+V_{\text{matter}}\right)${C.N("\\chi")}`;
-const neutrinoRel = String.raw`\left(i\gamma^\mu\partial_\mu-m\right)${C.N("\\nu")}=0`;
+const neutrinoFieldStructure = String.raw`${C.N("\\nu")}=\begin{pmatrix}\varphi_\nu\\ \chi_\nu\end{pmatrix}`;
+const neutrinoFieldStructureExpanded = String.raw`${C.N("\\nu")}=\begin{pmatrix}|\varphi_{\nu,1}|\,e^{i\alpha_1}\\ |\varphi_{\nu,2}|\,e^{i\alpha_2}\\ |\chi_{\nu,1}|\,e^{i\beta_1}\\ |\chi_{\nu,2}|\,e^{i\beta_2}\end{pmatrix}`;
+const neutrinoFreeLagrangian = String.raw`\mathcal{L}_0=\bar{${C.N("\\nu")}}\left(i\gamma^\mu\partial_\mu-m_\nu\right)${C.N("\\nu")}`;
+const neutrinoNonRel = String.raw`i\partial_t${C.N("\\varphi_\nu")}\approx-\frac{\nabla^2}{2m_\nu}${C.N("\\varphi_\nu")}`;
+const neutrinoRel = String.raw`\left(i\gamma^\mu\partial_\mu-m_\nu\right)${C.N("\\nu")}=0`;
+const neutrinoInteractingLagrangian = String.raw`\mathcal{L}=\bar{${C.N("\\nu")}}_L\left(i\gamma^\mu D_\mu\right)${C.N("\\nu")}_L-m_\nu\bar{${C.N("\\nu")}}${C.N("\\nu")},\quad D_\mu=\partial_\mu-\frac{ig}{2}W_\mu^i\tau^i+\frac{ig'}{2}B_\mu`;
+const neutrinoInteractingNonRel = String.raw`i\partial_t${C.N("\\varphi_\nu")}\approx\left(-\frac{\nabla^2}{2m_\nu}+V_{\text{matter}}\right)${C.N("\\varphi_\nu")}`;
+const neutrinoInteractingRel = String.raw`\left(i\gamma^\mu D_\mu-m_\nu\right)${C.N("\\nu")}=0`;
 
 // ── Quark shared LaTeX ───────────────────────────────────────────────────────
-const quarkFieldStructure = String.raw`${C.Q("q^a")}=\begin{pmatrix}q_L^a\\ q_R^a\end{pmatrix},\quad a=1,2,3`;
-const quarkFieldStructureShort = String.raw`${C.Q("q^a")}=\begin{pmatrix}q_L^a\\ q_R^a\end{pmatrix}`;
-const quarkFieldStructureExpanded = String.raw`${C.Q("q^{\\color{red}{r}}")}=\begin{pmatrix}R_1^r\,e^{i\phi_1^r}\\ R_2^r\,e^{i\phi_2^r}\\ R_3^r\,e^{i\phi_3^r}\\ R_4^r\,e^{i\phi_4^r}\end{pmatrix},\;${C.Q("q^{\\color{green}{g}}")}=\begin{pmatrix}R_1^g\,e^{i\phi_1^g}\\ R_2^g\,e^{i\phi_2^g}\\ R_3^g\,e^{i\phi_3^g}\\ R_4^g\,e^{i\phi_4^g}\end{pmatrix},\;${C.Q("q^{\\color{#4488ff}{b}}")}=\begin{pmatrix}R_1^b\,e^{i\phi_1^b}\\ R_2^b\,e^{i\phi_2^b}\\ R_3^b\,e^{i\phi_3^b}\\ R_4^b\,e^{i\phi_4^b}\end{pmatrix}`;
+const quarkFieldStructure = String.raw`${C.Q("q^a")}=\begin{pmatrix}\varphi^a\\ \chi^a\end{pmatrix},\quad a=1,2,3`;
+const quarkFieldStructureShort = String.raw`${C.Q("q^a")}=\begin{pmatrix}\varphi^a\\ \chi^a\end{pmatrix}`;
+const quarkFieldStructureExpanded = String.raw`${C.Q("q^{\\color{red}{r}}")}=\begin{pmatrix}|\varphi_1^r|\,e^{i\alpha_1^r}\\ |\varphi_2^r|\,e^{i\alpha_2^r}\\ |\chi_1^r|\,e^{i\beta_1^r}\\ |\chi_2^r|\,e^{i\beta_2^r}\end{pmatrix},\;${C.Q("q^{\\color{green}{g}}")}=\begin{pmatrix}|\varphi_1^g|\,e^{i\alpha_1^g}\\ |\varphi_2^g|\,e^{i\alpha_2^g}\\ |\chi_1^g|\,e^{i\beta_1^g}\\ |\chi_2^g|\,e^{i\beta_2^g}\end{pmatrix},\;${C.Q("q^{\\color{#4488ff}{b}}")}=\begin{pmatrix}|\varphi_1^b|\,e^{i\alpha_1^b}\\ |\varphi_2^b|\,e^{i\alpha_2^b}\\ |\chi_1^b|\,e^{i\beta_1^b}\\ |\chi_2^b|\,e^{i\beta_2^b}\end{pmatrix}`;
 const quarkFieldStructureExpandedShort = quarkFieldStructureExpanded;
 const quarkFreeLagrangian = String.raw`\mathcal{L}_0=\bar{${C.Q("q}_a")}\left(i\gamma^\mu\partial_\mu-m\right)${C.Q("q^a")}`;
-const quarkNonRel = String.raw`i\partial_t${C.Q("\\phi")}=\left[\frac{(\mathbf{p}-g_s\mathbf{G}^bT^b)^2}{2m}+V\right]${C.Q("\\phi")}`;
-const quarkRel = String.raw`\left(i\gamma^\mu D_\mu-m\right)${C.Q("q")}=0`;
+const quarkNonRel = String.raw`i\partial_t${C.Q("\\phi")}=-\frac{\nabla^2}{2m}${C.Q("\\phi")}`;
+const quarkRel = String.raw`\left(i\gamma^\mu\partial_\mu-m\right)${C.Q("q")}=0`;
+const quarkInteractingLagrangian = String.raw`\mathcal{L}=\bar{${C.Q("q}_a")}\left(i\gamma^\mu D_\mu-m\right)${C.Q("q^a")},\quad D_\mu=\partial_\mu-ig_sG_\mu^bT^b`;
+const quarkInteractingNonRel = String.raw`i\partial_t${C.Q("\\phi")}=\left[\frac{(\mathbf{p}-g_s\mathbf{G}^bT^b)^2}{2m}+V\right]${C.Q("\\phi")}`;
+const quarkInteractingRel = String.raw`\left(i\gamma^\mu D_\mu-m\right)${C.Q("q")}=0`;
 
 const weakYangMillsFieldStrength = String.raw`W^i_{\mu\nu}=\partial_\mu W^i_\nu-\partial_\nu W^i_\mu+g\,\epsilon^{ijk}W^j_\mu W^k_\nu`;
 const weakYangMillsEquation = (index) => String.raw`\left(D_\mu W^{\mu\nu}\right)^${index}=J^{${index}\nu}`;
@@ -56,13 +88,18 @@ const fermionCatalog = [
     family: "Lepton",
     accent: "var(--field-accent-lepton)",
     description: "First-generation charged lepton and a core constituent of ordinary atoms.",
-    fieldStructure: leptonFieldStructure + String.raw`,\quad ${C.L("\\psi")}\in(\mathbf{1},\mathbf{2})_{-1/2}\oplus(\mathbf{1},\mathbf{1})_{-1}`,
-    fieldStructureExpanded: leptonFieldStructureExpanded + String.raw`,\quad ${C.L("\\psi")}\in(\mathbf{1},\mathbf{2})_{-1/2}\oplus(\mathbf{1},\mathbf{1})_{-1}`,
-    freeLagrangian: leptonFreeLagrangian,
-    nonRelEquation: leptonNonRel,
-    nonRelName: "Schrödinger equation",
-    relEquation: leptonRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: leptonFieldStructure, expanded: leptonFieldStructureExpanded },
+    lagrangian: { free: leptonFreeLagrangian, interacting: leptonInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: leptonNonRel, name: "Schrödinger equation" },
+        rel: { math: leptonRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: leptonInteractingNonRel, name: "Pauli equation" },
+        rel: { math: leptonInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`U(1)_{\mathrm{em}}\ \text{(local)}`,
       localRule: String.raw`\psi(x)\to e^{iq\alpha(x)}\psi(x),\quad A_\mu\to A_\mu-\partial_\mu\alpha(x)`,
@@ -77,13 +114,18 @@ const fermionCatalog = [
     family: "Lepton",
     accent: "var(--field-accent-lepton)",
     description: "Heavier charged-lepton partner of the electron, unstable outside collision environments.",
-    fieldStructure: leptonFieldStructure,
-    fieldStructureExpanded: leptonFieldStructureExpanded,
-    freeLagrangian: leptonFreeLagrangian,
-    nonRelEquation: leptonNonRel,
-    nonRelName: "Schrödinger equation",
-    relEquation: leptonRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: leptonFieldStructure, expanded: leptonFieldStructureExpanded },
+    lagrangian: { free: leptonFreeLagrangian, interacting: leptonInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: leptonNonRel, name: "Schrödinger equation" },
+        rel: { math: leptonRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: leptonInteractingNonRel, name: "Pauli equation" },
+        rel: { math: leptonInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`\psi_{L}\to U_L(x)\psi_{L},\quad \psi_{R}\to e^{iy\beta(x)}\psi_{R}`,
@@ -97,13 +139,18 @@ const fermionCatalog = [
     family: "Lepton",
     accent: "var(--field-accent-lepton)",
     description: "The heaviest charged lepton, with a very short lifetime.",
-    fieldStructure: leptonFieldStructure,
-    fieldStructureExpanded: leptonFieldStructureExpanded,
-    freeLagrangian: leptonFreeLagrangian,
-    nonRelEquation: leptonNonRel,
-    nonRelName: "Schrödinger equation",
-    relEquation: leptonRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: leptonFieldStructure, expanded: leptonFieldStructureExpanded },
+    lagrangian: { free: leptonFreeLagrangian, interacting: leptonInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: leptonNonRel, name: "Schrödinger equation" },
+        rel: { math: leptonRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: leptonInteractingNonRel, name: "Pauli equation" },
+        rel: { math: leptonInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`\psi_{\tau,L}\to U_L(x)\psi_{\tau,L},\quad \psi_{\tau,R}\to e^{iy_\tau\beta(x)}\psi_{\tau,R}`,
@@ -118,18 +165,23 @@ const fermionCatalog = [
     symbol: String.raw`\nu_e`,
     family: "Neutrino",
     accent: "var(--field-accent-neutrino)",
-    description: "Electron-flavor neutrino with no direct electromagnetic charge.",
-    fieldStructure: String.raw`${C.N("\\nu")}=\nu_{L},\quad ${C.N("\\psi_{\\nu}")}=P_L${C.N("\\psi_{\\nu}")}`,
-    fieldStructureExpanded: neutrinoFieldStructureExpanded,
-    freeLagrangian: neutrinoFreeLagrangian,
-    nonRelEquation: neutrinoNonRel,
-    nonRelName: "MSW evolution equation",
-    relEquation: neutrinoRel,
-    relName: "Dirac equation",
+    description: "Electron-flavor neutrino; massive, with a Dirac spinor structure.",
+    fieldStructure: { compact: neutrinoFieldStructure, expanded: neutrinoFieldStructureExpanded },
+    lagrangian: { free: neutrinoFreeLagrangian, interacting: neutrinoInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: neutrinoNonRel, name: "Schrödinger equation" },
+        rel: { math: neutrinoRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: neutrinoInteractingNonRel, name: "MSW evolution equation" },
+        rel: { math: neutrinoInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\ \text{(local)}`,
-      localRule: String.raw`\nu_{e,L}\to U_L(x)\nu_{e,L},\quad Y=-\tfrac{1}{2}`,
-      interpretation: "Belongs to a left-handed electroweak doublet and has no direct U(1)_em coupling.",
+      localRule: String.raw`\nu_{e,L}\to U_L(x)\nu_{e,L},\quad \nu_{e,R}\to e^{ig'Y\beta(x)}\nu_{e,R},\quad Y=-\tfrac{1}{2},\,0`,
+      interpretation: "Left-handed component sits in an electroweak doublet; the right-handed sterile component is a gauge singlet.",
       interpretationMath: String.raw`U(1)_{\mathrm{em}}`,
     },
   },
@@ -139,18 +191,23 @@ const fermionCatalog = [
     symbol: String.raw`\nu_\mu`,
     family: "Neutrino",
     accent: "var(--field-accent-neutrino)",
-    description: "Second-generation neutrino participating in flavor oscillations.",
-    fieldStructure: String.raw`${C.N("\\nu")}=\nu_{L}`,
-    fieldStructureExpanded: neutrinoFieldStructureExpanded,
-    freeLagrangian: neutrinoFreeLagrangian,
-    nonRelEquation: neutrinoNonRel,
-    nonRelName: "MSW evolution equation",
-    relEquation: neutrinoRel,
-    relName: "Dirac equation",
+    description: "Second-generation massive neutrino participating in flavor oscillations.",
+    fieldStructure: { compact: neutrinoFieldStructure, expanded: neutrinoFieldStructureExpanded },
+    lagrangian: { free: neutrinoFreeLagrangian, interacting: neutrinoInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: neutrinoNonRel, name: "Schrödinger equation" },
+        rel: { math: neutrinoRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: neutrinoInteractingNonRel, name: "MSW evolution equation" },
+        rel: { math: neutrinoInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\ \text{(local)}`,
-      localRule: String.raw`\nu_{\mu,L}\to U_L(x)\nu_{\mu,L}`,
-      interpretation: "Shares electroweak gauge structure with other neutrinos; flavor mixing is encoded by PMNS.",
+      localRule: String.raw`\nu_{\mu,L}\to U_L(x)\nu_{\mu,L},\quad \nu_{\mu,R}\to \nu_{\mu,R}`,
+      interpretation: "Shares electroweak gauge structure with other neutrinos; right-handed component is a gauge singlet. Flavor mixing is encoded by PMNS.",
     },
   },
   {
@@ -159,18 +216,23 @@ const fermionCatalog = [
     symbol: String.raw`\nu_\tau`,
     family: "Neutrino",
     accent: "var(--field-accent-neutrino)",
-    description: "Tau-flavor neutrino with the same left-chiral structure as other neutrinos.",
-    fieldStructure: String.raw`${C.N("\\nu")}=\nu_{L}`,
-    fieldStructureExpanded: neutrinoFieldStructureExpanded,
-    freeLagrangian: neutrinoFreeLagrangian,
-    nonRelEquation: neutrinoNonRel,
-    nonRelName: "MSW evolution equation",
-    relEquation: neutrinoRel,
-    relName: "Dirac equation",
+    description: "Tau-flavor massive neutrino with Dirac spinor structure.",
+    fieldStructure: { compact: neutrinoFieldStructure, expanded: neutrinoFieldStructureExpanded },
+    lagrangian: { free: neutrinoFreeLagrangian, interacting: neutrinoInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: neutrinoNonRel, name: "Schrödinger equation" },
+        rel: { math: neutrinoRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: neutrinoInteractingNonRel, name: "MSW evolution equation" },
+        rel: { math: neutrinoInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\ \text{(local)}`,
-      localRule: String.raw`\nu_{\tau,L}\to U_L(x)\nu_{\tau,L}`,
-      interpretation: "Transforms as a component of an electroweak doublet under local gauge symmetry.",
+      localRule: String.raw`\nu_{\tau,L}\to U_L(x)\nu_{\tau,L},\quad \nu_{\tau,R}\to \nu_{\tau,R}`,
+      interpretation: "Transforms as a component of an electroweak doublet; right-handed component is a sterile gauge singlet.",
     },
   },
 
@@ -182,13 +244,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Charge +2/3 quark contributing to proton and neutron structure.",
-    fieldStructure: quarkFieldStructure,
-    fieldStructureExpanded: quarkFieldStructureExpanded,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructure, expanded: quarkFieldStructureExpanded },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\ \text{(local)}`,
       localRule: String.raw`u^a\to U_c^{ab}(x)u^b,\quad q_L\to U_L(x)q_L`,
@@ -203,13 +270,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Charge -1/3 quark paired with up quarks in light hadrons.",
-    fieldStructure: quarkFieldStructure,
-    fieldStructureExpanded: quarkFieldStructureExpanded,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructure, expanded: quarkFieldStructureExpanded },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`d^a\to U_c^{ab}(x)d^b`,
@@ -224,13 +296,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Heavy second-generation quark.",
-    fieldStructure: quarkFieldStructureShort,
-    fieldStructureExpanded: quarkFieldStructureExpandedShort,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructureShort, expanded: quarkFieldStructureExpandedShort },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\ \text{(local)}`,
       localRule: String.raw`c^a\to U_c^{ab}(x)c^b`,
@@ -244,13 +321,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Second-generation quark associated with strange hadron states.",
-    fieldStructure: quarkFieldStructureShort,
-    fieldStructureExpanded: quarkFieldStructureExpandedShort,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructureShort, expanded: quarkFieldStructureExpandedShort },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`s^a\to U_c^{ab}(x)s^b`,
@@ -265,13 +347,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Most massive quark, decaying before full hadronization.",
-    fieldStructure: quarkFieldStructureShort,
-    fieldStructureExpanded: quarkFieldStructureExpandedShort,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructureShort, expanded: quarkFieldStructureExpandedShort },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\ \text{(local)}`,
       localRule: String.raw`t^a\to U_c^{ab}(x)t^b`,
@@ -285,13 +372,18 @@ const fermionCatalog = [
     family: "Quark",
     accent: "var(--field-accent-quark)",
     description: "Third-generation down-type quark appearing in B mesons.",
-    fieldStructure: quarkFieldStructureShort,
-    fieldStructureExpanded: quarkFieldStructureExpandedShort,
-    freeLagrangian: quarkFreeLagrangian,
-    nonRelEquation: quarkNonRel,
-    nonRelName: "Pauli equation",
-    relEquation: quarkRel,
-    relName: "Dirac equation",
+    fieldStructure: { compact: quarkFieldStructureShort, expanded: quarkFieldStructureExpandedShort },
+    lagrangian: { free: quarkFreeLagrangian, interacting: quarkInteractingLagrangian },
+    equation: {
+      free: {
+        nonRel: { math: quarkNonRel, name: "Schrödinger equation" },
+        rel: { math: quarkRel, name: "Dirac equation" },
+      },
+      interacting: {
+        nonRel: { math: quarkInteractingNonRel, name: "Pauli equation" },
+        rel: { math: quarkInteractingRel, name: "Dirac equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(3)_c\times SU(2)_L\times U(1)_Y\ \text{(local)}`,
       localRule: String.raw`b^a\to U_c^{ab}(x)b^b`,
@@ -309,12 +401,19 @@ const brokenBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Massless gauge boson of electromagnetism.",
-    fieldStructure: String.raw`${C.G("A_\\mu")}=\left(\phi,\,A_x,\,A_y,\,A_z\right)`,
-    freeLagrangian: String.raw`\mathcal{L}_{0,\gamma}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu},\quad F_{\mu\nu}=\partial_\mu ${C.G("A_\\nu")}-\partial_\nu ${C.G("A_\\mu")}`,
-    nonRelEquation: String.raw`\nabla\cdot\mathbf{E}=\rho,\quad \nabla\times\mathbf{B}-\partial_t\mathbf{E}=\mathbf{J}`,
-    nonRelName: "Maxwell equations",
-    relEquation: String.raw`\partial_\mu F^{\mu\nu}=J^\nu`,
-    relName: "Maxwell equation (covariant)",
+    fieldStructure: { compact: String.raw`${C.G("A_\\mu")}=\left(\phi,\,A_x,\,A_y,\,A_z\right)` },
+    toggleLabels: { nonRel: "Classical formulation", rel: "Tensor formulation" },
+    lagrangian: { free: String.raw`\mathcal{L}_{0,\gamma}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu},\quad F_{\mu\nu}=\partial_\mu ${C.G("A_\\nu")}-\partial_\nu ${C.G("A_\\mu")}`, interacting: String.raw`\mathcal{L}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}-${C.G("A_\\mu")}J^\mu` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`\nabla\cdot\mathbf{E}=0,\quad \nabla\times\mathbf{B}-\partial_t\mathbf{E}=0`, name: "Maxwell equations (vacuum)" },
+        rel: { math: String.raw`\partial_\mu F^{\mu\nu}=0`, name: "Maxwell equation (vacuum)" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`\nabla\cdot\mathbf{E}=\rho,\quad \nabla\times\mathbf{B}-\partial_t\mathbf{E}=\mathbf{J}`, name: "Maxwell equations" },
+        rel: { math: String.raw`\partial_\mu F^{\mu\nu}=J^\nu`, name: "Maxwell equation (covariant)" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`\text{Emergent }U(1)_{\mathrm{em}}\text{ from local }U(1)`,
       localRule: String.raw`A_\mu\to A_\mu-\partial_\mu\alpha(x),\quad \psi\to e^{iq\alpha(x)}\psi`,
@@ -328,12 +427,18 @@ const brokenBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Charged weak-interaction gauge bosons.",
-    fieldStructure: String.raw`${C.G("W_\\mu")}^\pm=\frac{1}{\sqrt{2}}\left(W_\mu^1\mp iW_\mu^2\right)`,
-    freeLagrangian: String.raw`\mathcal{L}_{0,W}=-\frac{1}{2}W^+_{\mu\nu}W^{-\mu\nu}+m_W^2${C.G("W")}^+_\mu ${C.G("W")}^{-\mu}`,
-    nonRelEquation: String.raw`i\partial_t${C.G("\\mathbf{W}")}\approx\left(-\frac{\nabla^2}{2m_W}+V\right)${C.G("\\mathbf{W}")}`,
-    nonRelName: "Proca-like equation",
-    relEquation: String.raw`\partial_\mu W^{\mu\nu}+m_W^2${C.G("W")}^\nu=J_W^\nu`,
-    relName: "Proca equation",
+    fieldStructure: { compact: String.raw`${C.G("W_\\mu")}^\pm=\frac{1}{\sqrt{2}}\left(W_\mu^1\mp iW_\mu^2\right)` },
+    lagrangian: { free: String.raw`\mathcal{L}_{0,W}=-\frac{1}{2}W^+_{\mu\nu}W^{-\mu\nu}+m_W^2${C.G("W")}^+_\mu ${C.G("W")}^{-\mu}`, interacting: String.raw`\mathcal{L}_W=-\frac{1}{2}W^+_{\mu\nu}W^{-\mu\nu}+m_W^2${C.G("W")}^+_\mu ${C.G("W")}^{-\mu}+\frac{g}{\sqrt{2}}\left(${C.G("W")}^+_\mu J^{\mu-}_{\mathrm{cc}}+\mathrm{h.c.}\right)` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`i\partial_t${C.G("\\mathbf{W}")}\approx-\frac{\nabla^2}{2m_W}${C.G("\\mathbf{W}")}`, name: "Proca-like equation" },
+        rel: { math: String.raw`\partial_\mu W^{\mu\nu}+m_W^2${C.G("W")}^\nu=0`, name: "Proca equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`i\partial_t${C.G("\\mathbf{W}")}\approx-\frac{\nabla^2}{2m_W}${C.G("\\mathbf{W}")}+\mathbf{J}_W`, name: "Proca-like equation" },
+        rel: { math: String.raw`\partial_\mu W^{\mu\nu}+m_W^2${C.G("W")}^\nu=J_W^\nu`, name: "Proca equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\ \text{(local)}`,
       localRule: String.raw`W_\mu^i\to U_L(x)W_\mu^iU_L^{-1}(x)-\frac{i}{g}(\partial_\mu U_L)U_L^{-1}`,
@@ -347,12 +452,18 @@ const brokenBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Neutral weak-interaction gauge boson.",
-    fieldStructure: String.raw`${C.G("Z_\\mu")}=\cos\theta_W\,W_\mu^3-\sin\theta_W\,B_\mu`,
-    freeLagrangian: String.raw`\mathcal{L}_{0,Z}=-\frac{1}{4}Z_{\mu\nu}Z^{\mu\nu}+\frac{m_Z^2}{2}${C.G("Z_\\mu")} ${C.G("Z")}^\mu`,
-    nonRelEquation: String.raw`i\partial_t${C.G("\\mathbf{Z}")}\approx\left(-\frac{\nabla^2}{2m_Z}+V\right)${C.G("\\mathbf{Z}")}`,
-    nonRelName: "Proca-like equation",
-    relEquation: String.raw`\partial_\mu Z^{\mu\nu}+m_Z^2${C.G("Z")}^\nu=J_Z^\nu`,
-    relName: "Proca equation",
+    fieldStructure: { compact: String.raw`${C.G("Z_\\mu")}=\cos\theta_W\,W_\mu^3-\sin\theta_W\,B_\mu` },
+    lagrangian: { free: String.raw`\mathcal{L}_{0,Z}=-\frac{1}{4}Z_{\mu\nu}Z^{\mu\nu}+\frac{m_Z^2}{2}${C.G("Z_\\mu")} ${C.G("Z")}^\mu`, interacting: String.raw`\mathcal{L}_Z=-\frac{1}{4}Z_{\mu\nu}Z^{\mu\nu}+\frac{m_Z^2}{2}${C.G("Z_\\mu")} ${C.G("Z")}^\mu+${C.G("Z_\\mu")}J_Z^\mu` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`i\partial_t${C.G("\\mathbf{Z}")}\approx-\frac{\nabla^2}{2m_Z}${C.G("\\mathbf{Z}")}`, name: "Proca-like equation" },
+        rel: { math: String.raw`\partial_\mu Z^{\mu\nu}+m_Z^2${C.G("Z")}^\nu=0`, name: "Proca equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`i\partial_t${C.G("\\mathbf{Z}")}\approx-\frac{\nabla^2}{2m_Z}${C.G("\\mathbf{Z}")}+\mathbf{J}_Z`, name: "Proca-like equation" },
+        rel: { math: String.raw`\partial_\mu Z^{\mu\nu}+m_Z^2${C.G("Z")}^\nu=J_Z^\nu`, name: "Proca equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`Z_\mu=\cos\theta_W W_\mu^3-\sin\theta_W B_\mu`,
@@ -367,12 +478,18 @@ const brokenBosonCatalog = [
     family: "Scalar",
     accent: "var(--field-accent-scalar)",
     description: "Scalar excitation of the Higgs doublet responsible for effective particle masses.",
-    fieldStructure: String.raw`${C.S("\\Phi")}=\frac{1}{\sqrt{2}}\begin{pmatrix}\phi_1+i\phi_2\\ v+h+i\phi_3\end{pmatrix}`,
-    freeLagrangian: String.raw`\mathcal{L}_0=\left(D_\mu${C.S("\\Phi")}\right)^\dagger\left(D^\mu${C.S("\\Phi")}\right)-\mu^2${C.S("\\Phi")}^\dagger${C.S("\\Phi")}-\lambda\left(${C.S("\\Phi")}^\dagger${C.S("\\Phi")}\right)^2`,
-    nonRelEquation: String.raw`i\partial_t${C.S("\\varphi")}=\left(-\frac{\nabla^2}{2m}+V_{\text{eff}}\right)${C.S("\\varphi")}`,
-    nonRelName: "Schrödinger equation",
-    relEquation: String.raw`\left(\Box+m^2\right)${C.S("h")}=0\quad(\text{to leading order around the vacuum})`,
-    relName: "Klein–Gordon equation",
+    fieldStructure: { compact: String.raw`${C.S("\\Phi")}=\frac{1}{\sqrt{2}}\begin{pmatrix}\phi_1+i\phi_2\\ v+h+i\phi_3\end{pmatrix}` },
+    lagrangian: { free: String.raw`\mathcal{L}_0=\left(\partial_\mu${C.S("\\Phi")}\right)^\dagger\left(\partial^\mu${C.S("\\Phi")}\right)-\mu^2${C.S("\\Phi")}^\dagger${C.S("\\Phi")}-\lambda\left(${C.S("\\Phi")}^\dagger${C.S("\\Phi")}\right)^2`, interacting: String.raw`\mathcal{L}=\left(D_\mu${C.S("\\Phi")}\right)^\dagger\left(D^\mu${C.S("\\Phi")}\right)-\mu^2${C.S("\\Phi")}^\dagger${C.S("\\Phi")}-\lambda\left(${C.S("\\Phi")}^\dagger${C.S("\\Phi")}\right)^2` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`i\partial_t${C.S("\\varphi")}=\left(-\frac{\nabla^2}{2m}+V_{\text{eff}}\right)${C.S("\\varphi")}`, name: "Schrödinger equation" },
+        rel: { math: String.raw`\left(\Box+m^2\right)${C.S("h")}=0\quad(\text{to leading order around the vacuum})`, name: "Klein–Gordon equation" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`i\partial_t${C.S("\\varphi")}=\left(-\frac{(\nabla-ig\mathbf{W}-ig'Y\mathbf{B})^2}{2m}+V_{\text{eff}}\right)${C.S("\\varphi")}`, name: "Schrödinger equation (gauged)" },
+        rel: { math: String.raw`\left(D_\mu D^\mu+m^2\right)${C.S("h")}\approx 0`, name: "Klein–Gordon equation (gauged)" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\to U(1)_{\mathrm{em}}`,
       localRule: String.raw`\Phi\to e^{i\beta(x)Y}U_L(x)\Phi,\quad \langle\Phi\rangle\neq 0`,
@@ -390,12 +507,18 @@ const restoredBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "First weak-isospin gauge field in the unbroken electroweak phase.",
-    fieldStructure: weakFieldStructure(1),
-    freeLagrangian: weakFreeLagrangian(1),
-    nonRelEquation: weakPlasmaEquation(1),
-    nonRelName: "Yang-Mills plasma equation",
-    relEquation: weakYangMillsEquation(1),
-    relName: "Yang-Mills equation",
+    fieldStructure: { compact: weakFieldStructure(1) },
+    lagrangian: { free: weakFreeLagrangian(1) },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`\left(D_jE_j\right)^1=0,\quad\left(D_\mu W^{\mu\nu}\right)^1=0`, name: "Yang-Mills plasma equation (free)" },
+        rel: { math: String.raw`\left(D_\mu W^{\mu\nu}\right)^1=0`, name: "Yang-Mills equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: weakPlasmaEquation(1), name: "Yang-Mills plasma equation" },
+        rel: { math: weakYangMillsEquation(1), name: "Yang-Mills equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\ \text{(local)}`,
       localRule: String.raw`W_\mu^i\to U_L(x)W_\mu^iU_L^{-1}(x)-\frac{i}{g}(\partial_\mu U_L)U_L^{-1}`,
@@ -409,12 +532,18 @@ const restoredBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Second weak-isospin gauge field in the unbroken electroweak phase.",
-    fieldStructure: weakFieldStructure(2),
-    freeLagrangian: weakFreeLagrangian(2),
-    nonRelEquation: weakPlasmaEquation(2),
-    nonRelName: "Yang-Mills plasma equation",
-    relEquation: weakYangMillsEquation(2),
-    relName: "Yang-Mills equation",
+    fieldStructure: { compact: weakFieldStructure(2) },
+    lagrangian: { free: weakFreeLagrangian(2) },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`\left(D_jE_j\right)^2=0,\quad\left(D_\mu W^{\mu\nu}\right)^2=0`, name: "Yang-Mills plasma equation (free)" },
+        rel: { math: String.raw`\left(D_\mu W^{\mu\nu}\right)^2=0`, name: "Yang-Mills equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: weakPlasmaEquation(2), name: "Yang-Mills plasma equation" },
+        rel: { math: weakYangMillsEquation(2), name: "Yang-Mills equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\ \text{(local)}`,
       localRule: String.raw`W_\mu^i\to U_L(x)W_\mu^iU_L^{-1}(x)-\frac{i}{g}(\partial_\mu U_L)U_L^{-1}`,
@@ -428,12 +557,18 @@ const restoredBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Neutral weak-isospin gauge field before mixing with hypercharge.",
-    fieldStructure: weakFieldStructure(3),
-    freeLagrangian: weakFreeLagrangian(3),
-    nonRelEquation: weakPlasmaEquation(3),
-    nonRelName: "Yang-Mills plasma equation",
-    relEquation: weakYangMillsEquation(3),
-    relName: "Yang-Mills equation",
+    fieldStructure: { compact: weakFieldStructure(3) },
+    lagrangian: { free: weakFreeLagrangian(3) },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`\left(D_jE_j\right)^3=0,\quad\left(D_\mu W^{\mu\nu}\right)^3=0`, name: "Yang-Mills plasma equation (free)" },
+        rel: { math: String.raw`\left(D_\mu W^{\mu\nu}\right)^3=0`, name: "Yang-Mills equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: weakPlasmaEquation(3), name: "Yang-Mills plasma equation" },
+        rel: { math: weakYangMillsEquation(3), name: "Yang-Mills equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\ \text{(local)}`,
       localRule: String.raw`W_\mu^i\to U_L(x)W_\mu^iU_L^{-1}(x)-\frac{i}{g}(\partial_\mu U_L)U_L^{-1}`,
@@ -448,12 +583,18 @@ const restoredBosonCatalog = [
     family: "Gauge boson",
     accent: "var(--field-accent-gauge)",
     description: "Massless hypercharge gauge boson before electroweak mixing.",
-    fieldStructure: String.raw`${C.G("B_\\mu")}=\left(B_0,\,B_1,\,B_2,\,B_3\right),\quad D_\mu=\partial_\mu-ig'YB_\mu`,
-    freeLagrangian: String.raw`\mathcal{L}_{0,B}=-\frac{1}{4}B_{\mu\nu}B^{\mu\nu},\quad ${hyperchargeFieldStrength}`,
-    nonRelEquation: String.raw`\nabla\cdot\mathbf{E}_Y=g'\rho_Y,\quad\nabla\times\mathbf{B}_Y-\partial_t\mathbf{E}_Y=g'\mathbf{J}_Y`,
-    nonRelName: "Hypercharge Maxwell equations",
-    relEquation: String.raw`\partial_\mu B^{\mu\nu}=g'J_Y^\nu`,
-    relName: "Maxwell equation (covariant)",
+    fieldStructure: { compact: String.raw`${C.G("B_\\mu")}=\left(B_0,\,B_1,\,B_2,\,B_3\right),\quad D_\mu=\partial_\mu-ig'YB_\mu` },
+    lagrangian: { free: String.raw`\mathcal{L}_{0,B}=-\frac{1}{4}B_{\mu\nu}B^{\mu\nu},\quad ${hyperchargeFieldStrength}`, interacting: String.raw`\mathcal{L}_B=-\frac{1}{4}B_{\mu\nu}B^{\mu\nu}-g'${C.G("B_\\mu")}J_Y^\mu` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`\nabla\cdot\mathbf{E}_Y=0,\quad\nabla\times\mathbf{B}_Y-\partial_t\mathbf{E}_Y=0`, name: "Hypercharge Maxwell equations (vacuum)" },
+        rel: { math: String.raw`\partial_\mu B^{\mu\nu}=0`, name: "Maxwell equation (covariant, vacuum)" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`\nabla\cdot\mathbf{E}_Y=g'\rho_Y,\quad\nabla\times\mathbf{B}_Y-\partial_t\mathbf{E}_Y=g'\mathbf{J}_Y`, name: "Hypercharge Maxwell equations" },
+        rel: { math: String.raw`\partial_\mu B^{\mu\nu}=g'J_Y^\nu`, name: "Maxwell equation (covariant)" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`U(1)_Y\ \text{(local)}`,
       localRule: String.raw`B_\mu\to B_\mu-\partial_\mu\beta(x),\quad\psi\to e^{ig'Y\beta(x)}\psi`,
@@ -468,12 +609,18 @@ const restoredBosonCatalog = [
     family: "Scalar",
     accent: "var(--field-accent-scalar)",
     description: "Thermal Higgs doublet before a vacuum expectation value forms.",
-    fieldStructure: symmetricHiggsField,
-    freeLagrangian: String.raw`\mathcal{L}_{0,\Phi}=\left(D_\mu${C.S("\\Phi")}\right)^\dagger\left(D^\mu${C.S("\\Phi")}\right)-${symmetricHiggsPotential}`,
-    nonRelEquation: String.raw`i\partial_t${C.S("\\Phi")}\approx\left(-\frac{\nabla^2}{2m_{\mathrm{eff}}(T)}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}\right)${C.S("\\Phi")}`,
-    nonRelName: "Thermal Higgs mode equation",
-    relEquation: String.raw`D_\mu D^\mu${C.S("\\Phi")}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}=0`,
-    relName: "Finite-temperature field equation",
+    fieldStructure: { compact: symmetricHiggsField },
+    lagrangian: { free: String.raw`\mathcal{L}_{0,\Phi}=\left(\partial_\mu${C.S("\\Phi")}\right)^\dagger\left(\partial^\mu${C.S("\\Phi")}\right)-${symmetricHiggsPotential}`, interacting: String.raw`\mathcal{L}_{0,\Phi}=\left(D_\mu${C.S("\\Phi")}\right)^\dagger\left(D^\mu${C.S("\\Phi")}\right)-${symmetricHiggsPotential}` },
+    equation: {
+      free: {
+        nonRel: { math: String.raw`i\partial_t${C.S("\\Phi")}\approx\left(-\frac{\nabla^2}{2m_{\mathrm{eff}}(T)}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}\right)${C.S("\\Phi")}`, name: "Thermal Higgs mode equation" },
+        rel: { math: String.raw`\partial_\mu\partial^\mu${C.S("\\Phi")}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}=0`, name: "Finite-temperature field equation (free)" },
+      },
+      interacting: {
+        nonRel: { math: String.raw`i\partial_t${C.S("\\Phi")}\approx\left(-\frac{(\nabla-ig\mathbf{W}-ig'Y\mathbf{B})^2}{2m_{\mathrm{eff}}(T)}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}\right)${C.S("\\Phi")}`, name: "Thermal Higgs mode equation" },
+        rel: { math: String.raw`D_\mu D^\mu${C.S("\\Phi")}+\frac{\partial V_T}{\partial ${C.S("\\Phi")}^\dagger}=0`, name: "Finite-temperature field equation" },
+      },
+    },
     symmetry: {
       gaugeGroup: String.raw`SU(2)_L\times U(1)_Y\ \text{(local)}`,
       localRule: String.raw`\Phi\to e^{i\beta(x)Y}U_L(x)\Phi,\quad \langle\Phi\rangle=0`,
@@ -486,11 +633,12 @@ const restoredBosonCatalog = [
 const brokenBosonRows = [["photon", "z-boson"], ["w-boson", "higgs"]];
 const restoredBosonRows = [["w1-boson", "w2-boson"], ["w3-boson", "b-boson"], ["higgs"]];
 
-function FieldCatalogPanel() {
+function StandardModelExplorerPanel() {
   const [selectedParticleId, setSelectedParticleId] = useState(fermionCatalog[0].id);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isFieldExpanded, setIsFieldExpanded] = useState(false);
   const [isRelativistic, setIsRelativistic] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
   const [isElectroweakRestored, setIsElectroweakRestored] = useState(false);
   const activeBosonCatalog = isElectroweakRestored ? restoredBosonCatalog : brokenBosonCatalog;
   const activeBosonRows = isElectroweakRestored ? restoredBosonRows : brokenBosonRows;
@@ -560,8 +708,8 @@ function FieldCatalogPanel() {
   const isFermion = ["Lepton", "Neutrino", "Quark"].includes(selectedParticle.family);
 
   return (
-    <section className="field-catalog-panel" aria-label="Field catalog">
-      <h1 className="content-title">Field catalog</h1>
+    <section className="field-catalog-panel" aria-label="Standard Model Explorer">
+      <h1 className="content-title">Standard Model Explorer</h1>
       <p className="field-catalog-intro">
         Explore the Standard Model particles as interactive field cards. Click one card to open its field profile,
         from field structure to free dynamics and gauge symmetry. DISCLAIMER: WORK IN PROGRESS, SOME FEATURES MAY NOT BE ACCURATE
@@ -657,49 +805,79 @@ function FieldCatalogPanel() {
               <h2 className="field-profile-title">{selectedParticle.name}</h2>
             </header>
 
-            <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
-              <div className="field-section-header">
-                <h3>Field Structure</h3>
-                {isFermion && selectedParticle.fieldStructureExpanded && (
-                  <label className="field-toggle">
-                    <input
-                      type="checkbox"
-                      checked={isFieldExpanded}
-                      onChange={() => setIsFieldExpanded((v) => !v)}
-                    />
-                    <span>{isFieldExpanded ? "Collapse" : "Expand"}</span>
-                  </label>
-                )}
-              </div>
-              <BlockMath
-                math={
-                  isFieldExpanded && selectedParticle.fieldStructureExpanded
-                    ? selectedParticle.fieldStructureExpanded
-                    : selectedParticle.fieldStructure
-                }
-              />
-            </div>
-
-            <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
-              <h3>Free Lagrangian</h3>
-              <BlockMath math={selectedParticle.freeLagrangian} />
-            </div>
-
-            <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
-              <div className="field-section-header">
-                <h3>{isRelativistic ? selectedParticle.relName : selectedParticle.nonRelName}</h3>
+            <div className="field-profile-controls">
+              {isFermion && selectedParticle.fieldStructure.expanded && (
                 <label className="field-toggle">
                   <input
                     type="checkbox"
-                    checked={isRelativistic}
-                    onChange={() => setIsRelativistic((v) => !v)}
+                    checked={isFieldExpanded}
+                    onChange={() => setIsFieldExpanded((v) => !v)}
                   />
-                  <span>{isRelativistic ? "Relativistic" : "Non-relativistic"}</span>
+                  <span>{isFieldExpanded ? "Collapse" : "Expand"} field</span>
                 </label>
-              </div>
+              )}
+              <label className="field-toggle">
+                <input
+                  type="checkbox"
+                  checked={isRelativistic}
+                  onChange={() => setIsRelativistic((v) => !v)}
+                />
+                <span>{isRelativistic ? (selectedParticle.toggleLabels?.rel ?? "Relativistic") : (selectedParticle.toggleLabels?.nonRel ?? "Non-relativistic")}</span>
+              </label>
+              <label className="field-toggle">
+                <input
+                  type="checkbox"
+                  checked={isInteracting}
+                  onChange={() => setIsInteracting((v) => !v)}
+                />
+                <span>{isInteracting ? "Interacting particle" : "Free particle"}</span>
+              </label>
+            </div>
+
+            <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
+              <h3>Field Structure</h3>
               <BlockMath
-                math={isRelativistic ? selectedParticle.relEquation : selectedParticle.nonRelEquation}
+                math={resolve(selectedParticle.fieldStructure, [
+                  isFieldExpanded ? "expanded" : "compact",
+                  isInteracting ? "interacting" : "free",
+                  isRelativistic ? "rel" : "nonRel",
+                ])}
               />
+            </div>
+
+            <div className="field-dynamics-row">
+              <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
+                {(() => {
+                  const lag = resolve(selectedParticle.lagrangian, [
+                    isInteracting ? "interacting" : "free",
+                    isRelativistic ? "rel" : "nonRel",
+                    isFieldExpanded ? "expanded" : "compact",
+                  ]);
+                  const lagLabel = isInteracting && selectedParticle.lagrangian.interacting ? "interacting" : "free";
+                  return (
+                    <>
+                      <h3>{"Lagrangian: " + lagLabel}</h3>
+                      <BlockMath math={typeof lag === "string" ? lag : lag.math} />
+                    </>
+                  );
+                })()}
+              </div>
+              <div className="field-dynamics-arrow" aria-hidden="true">&#x2192;</div>
+              <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
+                {(() => {
+                  const eq = resolve(selectedParticle.equation, [
+                    isInteracting ? "interacting" : "free",
+                    isRelativistic ? "rel" : "nonRel",
+                    isFieldExpanded ? "expanded" : "compact",
+                  ]);
+                  return (
+                    <>
+                      <h3>{"Motion equation: " + eq.name}</h3>
+                      <BlockMath math={eq.math} />
+                    </>
+                  );
+                })()}
+              </div>
             </div>
 
             <div className="field-profile-section" style={{ "--field-accent": selectedParticle.accent }}>
@@ -732,4 +910,4 @@ function FieldCatalogPanel() {
   );
 }
 
-export default FieldCatalogPanel;
+export default StandardModelExplorerPanel;

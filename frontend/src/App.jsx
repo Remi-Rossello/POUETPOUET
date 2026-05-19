@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./projects/lagrangian/LagrangianPanel"));
-const FieldCatalogPanel = lazy(() => import("./projects/field-catalog/FieldCatalogPanel"));
+const StandardModelExplorerPanel = lazy(() => import("./projects/field-catalog/FieldCatalogPanel"));
 const DigitRecognizerPanel = lazy(() => import("./projects/digit-recognizer/DigitRecognizerPanel"));
 const DinoSkillPanel = lazy(() => import("./projects/dino/DinoSkillPanel"));
 const PublicationPanel = lazy(() => import("./projects/publications/PublicationPanel"));
@@ -20,7 +20,7 @@ const latestNewsItems = [
   },
   {
     id: "field-catalog",
-    title: "Field catalog",
+    title: "Standard Model Explorer",
     status: "In progress",
     date: "March 21st 2026",
     sortDate: "2026-03-21",
@@ -304,7 +304,7 @@ function App() {
                   {activeProject === "dino-skill" && <DinoSkillPanel />}
 
                   {activeProject === "field-catalog" && (
-                    <FieldCatalogPanel />
+                    <StandardModelExplorerPanel />
                   )}
 
                   {activeProject === "computer-roadmap" && (

@@ -321,6 +321,31 @@
   justify-content: flex-start;
 }
 
+/* ── Dynamics row: Lagrangian + arrow + equation side-by-side ──── */
+.field-dynamics-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 0.58rem;
+}
+
+.field-dynamics-row .field-profile-section {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.field-dynamics-arrow {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.55rem;
+  font-size: 1.35rem;
+  color: color-mix(in srgb, var(--field-accent) 70%, var(--text-soft));
+  align-self: center;
+}
+
 .field-profile-symmetry-grid {
   margin: 0;
   display: grid;
@@ -347,6 +372,16 @@
   margin: 0;
   display: flex;
   justify-content: flex-start;
+}
+
+/* ── Control panel bar at the top of each profile card ──────────── */
+.field-profile-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--field-accent) 22%, var(--border));
+  background: color-mix(in srgb, var(--field-accent) 6%, transparent);
 }
 
 /* ── Section header with inline toggle ───────────────────────────── */
