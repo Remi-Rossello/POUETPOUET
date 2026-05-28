@@ -4,21 +4,16 @@ import { certificationItems, linkedInCertificationsUrl } from "./certificationIt
 function CredentialsTab() {
   const [selectedCertification, setSelectedCertification] = useState(null);
 
-  const certificationSections = ["Engineering", "Computer Science", "Humanities"];
+  const certificationSections = ["Computer Science", "Engineering", "Humanities"];
   const canShowVerificationLink =
     selectedCertification?.credentialUrl && selectedCertification.credentialUrl !== linkedInCertificationsUrl;
-  const selectedLinkLabel = selectedCertification?.linkLabel || "Verify credential";
+  const selectedLinkLabel = selectedCertification?.linkLabel || "Link";
 
   return (
     <section id="panel-certifications" role="tabpanel" aria-labelledby="tab-certifications">
-      <h1 className="content-title">Credentials</h1>
 
       {selectedCertification ? (
         <div className="certification-viewer">
-          <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
-            ← Back to grid
-          </button>
-
           <div className="certification-viewer-head">
             {selectedCertification.logoUrl && (
               <img className="certification-logo" src={selectedCertification.logoUrl} alt={selectedCertification.issuer} />
@@ -35,12 +30,32 @@ function CredentialsTab() {
 
           {selectedCertification.diplomaImage ? (
             <div className="certification-image-wrap">
+              <div className="certification-nav">
+                <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
+                  ← Go back
+                </button>
+                {canShowVerificationLink && (
+                  <a
+                    className="button button-secondary certification-link"
+                    href={selectedCertification.credentialUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {selectedLinkLabel}
+                  </a>
+                )}
+              </div>
               <img
                 className="certification-image"
                 src={selectedCertification.diplomaImage}
                 alt={`${selectedCertification.title} diploma`}
               />
-
+            </div>
+          ) : (
+            <div className="certification-nav">
+              <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
+                ← Go back
+              </button>
               {canShowVerificationLink && (
                 <a
                   className="button button-secondary certification-link"
@@ -52,25 +67,19 @@ function CredentialsTab() {
                 </a>
               )}
             </div>
-          ) : (
-            canShowVerificationLink && (
-              <a
-                className="button button-secondary certification-link"
-                href={selectedCertification.credentialUrl || linkedInCertificationsUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {selectedLinkLabel}
-              </a>
-            )
           )}
         </div>
       ) : certificationItems.length === 0 ? (
-        <p className="subtitle certifications-empty">
-          LinkedIn blocks automated extraction here. Share your certification list and I can populate this grid instantly.
-        </p>
+        <>
+          <h1 className="content-title">Credentials</h1>
+          <p className="subtitle certifications-empty">
+            LinkedIn blocks automated extraction here. Share your certification list and I can populate this grid instantly.
+          </p>
+        </>
       ) : (
-        <div className="certifications-sections">
+        <>
+          <h1 className="content-title">Credentials</h1>
+          <div className="certifications-sections">
           {certificationSections.map((sectionTitle) => {
             const sectionItems = certificationItems.filter((certification) => certification.section === sectionTitle);
             if (sectionItems.length === 0) {
@@ -104,6 +113,7 @@ function CredentialsTab() {
             );
           })}
         </div>
+        </>
       )}
     </section>
   );
