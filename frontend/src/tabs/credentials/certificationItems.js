@@ -10,6 +10,16 @@ export const certificationItems = [
   },
   {
     section: "Computer Science",
+    title: "The Complete Quantum Computing Course",
+    issuer: "Udemy",
+    date: "Issued May 2026",
+    credentialId: "UC-c3a99457-6b8a-4a26-82ea-61773c5f95d3",
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=udemy.com",
+    credentialUrl: "https://www.udemy.com/certificate/UC-c3a99457-6b8a-4a26-82ea-61773c5f95d3/",
+    diplomaImage: "/assets/images/quantum-certif.png",
+  },
+  {
+    section: "Computer Science",
     title: "Introduction to Scala Course",
     issuer: "DataCamp",
     date: "Issued Feb 2026",
