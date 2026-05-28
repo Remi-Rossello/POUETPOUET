@@ -35,7 +35,7 @@ const publications = {
  * @param {string} props.publicationId Publication identifier.
  * @returns {JSX.Element} Publication panel.
  */
-function PublicationPanel({ publicationId }) {
+function PublicationPanel({ publicationId, onBack }) {
   const publication = publications[publicationId];
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(null);
@@ -95,6 +95,9 @@ function PublicationPanel({ publicationId }) {
   return (
     <section className="project-panel publication-panel" aria-label={title}>
       <h1 className="content-title">{title}</h1>
+      <div className="project-detail-toolbar">
+        <button className="button button-secondary" type="button" onClick={onBack}>← Go back</button>
+      </div>
 
       <div className="project-intro">
         <p className="project-body-text">{summary}</p>

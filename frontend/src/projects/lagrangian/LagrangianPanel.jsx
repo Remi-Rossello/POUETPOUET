@@ -346,7 +346,7 @@ const drawVariants = {
  * Displays an interactive explorer for the Standard Model Lagrangian density.
  * @returns {JSX.Element} Interactive Lagrangian panel.
  */
-function LagrangianPanel() {
+function LagrangianPanel({ onBack }) {
   // Navigation stack tracks the current node path in the equation tree.
   const [navigationStack, setNavigationStack] = useState(["root"]);
   const [isEquationFullscreen, setIsEquationFullscreen] = useState(false);
@@ -523,6 +523,9 @@ function LagrangianPanel() {
       animate="visible"
     >
       <h1 className="content-title">Standard model lagrangian explorer</h1>
+      <div className="project-detail-toolbar">
+        <button className="button button-secondary" type="button" onClick={onBack}>← Go back</button>
+      </div>
 
       <motion.div className="project-intro" variants={itemVariants}>
         <p className="project-body-text">

@@ -6,13 +6,15 @@ import "./dino.css";
  * Displays the Dino skill documentation with setup details and markdown preview.
  * @returns {JSX.Element} Dino skill panel.
  */
-function DinoSkillPanel() {
+function DinoSkillPanel({ onBack }) {
   return (
     <section className="project-panel dino-skill-panel" aria-label="Dino skill documentation">
       <header className="dino-simple-header">
-        <p className="dino-eyebrow">Agent skill</p>
         <h1 className="content-title dino-content-title">Agent Skill: Dino Game</h1>
       </header>
+      <div className="project-detail-toolbar">
+        <button className="button button-secondary" type="button" onClick={onBack}>← Go back</button>
+      </div>
 
       <section className="project-intro dino-story" aria-label="Dino skill overview">
         <p className="project-body-text dino-story-paragraph">

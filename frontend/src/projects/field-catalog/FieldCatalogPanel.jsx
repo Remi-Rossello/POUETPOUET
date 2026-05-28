@@ -633,7 +633,7 @@ const restoredBosonCatalog = [
 const brokenBosonRows = [["photon", "z-boson"], ["w-boson", "higgs"]];
 const restoredBosonRows = [["w1-boson", "w2-boson"], ["w3-boson", "b-boson"], ["higgs"]];
 
-function StandardModelExplorerPanel() {
+function StandardModelExplorerPanel({ onBack }) {
   const [selectedParticleId, setSelectedParticleId] = useState(fermionCatalog[0].id);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isFieldExpanded, setIsFieldExpanded] = useState(false);
@@ -710,6 +710,9 @@ function StandardModelExplorerPanel() {
   return (
     <section className="field-catalog-panel" aria-label="Standard Model Explorer">
       <h1 className="content-title">Standard Model Explorer</h1>
+      <div className="project-detail-toolbar">
+        <button className="button button-secondary" type="button" onClick={onBack}>← Go back</button>
+      </div>
       <p className="field-catalog-intro">
         Explore the Standard Model particles as interactive field cards. Click one card to open its field profile,
         from field structure to free dynamics and gauge symmetry. DISCLAIMER: WORK IN PROGRESS, SOME FEATURES MAY NOT BE ACCURATE

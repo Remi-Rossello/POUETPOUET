@@ -330,31 +330,33 @@ function App() {
 
             {activeProject && (
               <div className="projects-content projects-content-cards">
-                <div className="project-detail-toolbar">
-                  <button className="button button-secondary" type="button" onClick={() => setActiveProject(null)}>
-                    ← Back to projects
-                  </button>
-                </div>
-
                 <Suspense fallback={<p className="project-loading">Loading project...</p>}>
-                  {activeProject === "lagrangian" && <LagrangianPanel />}
+                  {activeProject === "lagrangian" && <LagrangianPanel onBack={() => setActiveProject(null)} />}
 
-                  {activeProject === "backend-test" && <DigitRecognizerPanel />}
+                  {activeProject === "backend-test" && <DigitRecognizerPanel onBack={() => setActiveProject(null)} />}
 
-                  {activeProject === "dino-skill" && <DinoSkillPanel />}
+                  {activeProject === "dino-skill" && <DinoSkillPanel onBack={() => setActiveProject(null)} />}
 
                   {activeProject === "field-catalog" && (
-                    <StandardModelExplorerPanel />
+                    <StandardModelExplorerPanel onBack={() => setActiveProject(null)} />
                   )}
 
                   {activeProject === "computer-roadmap" && (
-                    <p className="project-loading">Upcoming</p>
+                    <>
+                      <div className="project-detail-toolbar">
+                        <button className="button button-secondary" type="button" onClick={() => setActiveProject(null)}>
+                          ← Go back
+                        </button>
+                      </div>
+                      <p className="project-loading">Upcoming</p>
+                    </>
                   )}
 
                   {activeProject === "publication-spintronics" && (
                     <PublicationPanel
                       key="publication-spintronics"
                       publicationId="publication-spintronics"
+                      onBack={() => setActiveProject(null)}
                     />
                   )}
 
@@ -362,6 +364,7 @@ function App() {
                     <PublicationPanel
                       key="publication-spectroscopy"
                       publicationId="publication-spectroscopy"
+                      onBack={() => setActiveProject(null)}
                     />
                   )}
 
@@ -369,6 +372,7 @@ function App() {
                     <PublicationPanel
                       key="publication-lunar-geology"
                       publicationId="publication-lunar-geology"
+                      onBack={() => setActiveProject(null)}
                     />
                   )}
                 </Suspense>

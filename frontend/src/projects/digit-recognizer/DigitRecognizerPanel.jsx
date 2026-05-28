@@ -6,7 +6,7 @@ import "./digit-recognizer.css";
  * Displays a button that calls the backend and shows the returned message.
  * @returns {JSX.Element} Backend call panel.
  */
-function DigitRecognizerPanel() {
+function DigitRecognizerPanel({ onBack }) {
   const gridSize = 28;
   const [pixels, setPixels] = useState(() => Array(gridSize * gridSize).fill(0));
   const [prediction, setPrediction] = useState(null);
@@ -120,9 +120,11 @@ function DigitRecognizerPanel() {
   return (
     <section className="project-panel backend-project-panel" aria-label="Digit recognizer demo">
       <header className="dino-simple-header">
-        <p className="dino-eyebrow">AI project</p>
         <h1 className="content-title dino-content-title">Digit recognizer</h1>
       </header>
+      <div className="project-detail-toolbar">
+        <button className="button button-secondary" type="button" onClick={onBack}>← Go back</button>
+      </div>
 
       <section className="project-intro dino-story" aria-label="Digit recognizer overview">
         <p className="project-body-text dino-story-paragraph">
