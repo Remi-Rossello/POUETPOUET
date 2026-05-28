@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import TabsHeader from "./components/TabsHeader";
 
 const LagrangianPanel = lazy(() => import("./projects/lagrangian/LagrangianPanel"));
@@ -65,15 +65,55 @@ const aboutCvOptions = [
  * Root frontend component with tab-based navigation.
  * @returns {JSX.Element} Main application layout.
  */
+const VALID_TABS = ["home", "about", "certifications", "projects"];
+
+function parseHash(hash) {
+  const path = hash.replace(/^#\/?/, "");
+  const [tab, project] = path.split("/");
+  return {
+    activeTab: VALID_TABS.includes(tab) ? tab : "home",
+    activeProject: tab === "projects" && project ? project : null,
+  };
+}
+
+function buildHash(tab, project) {
+  if (tab === "projects" && project) return `#projects/${project}`;
+  return `#${tab}`;
+}
+
 const BACKEND_BASE_URL = import.meta.env.DEV
   ? "http://localhost:3000"
   : "https://backend-production-rossello.up.railway.app";
 
 function App() {
-  const [activeTab, setActiveTab] = useState("home");
-  const [activeProject, setActiveProject] = useState(null);
+  const initialState = parseHash(window.location.hash);
+  const [activeTab, setActiveTab] = useState(initialState.activeTab);
+  const [activeProject, setActiveProject] = useState(initialState.activeProject);
   const [aboutTrack, setAboutTrack] = useState("engineering");
+  const isFirstRender = useRef(true);
   const [visits, setVisits] = useState(null);
+
+  // Sync URL → state on browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      const { activeTab: tab, activeProject: project } = parseHash(window.location.hash);
+      setActiveTab(tab);
+      setActiveProject(project);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Sync state → URL
+  useEffect(() => {
+    const newHash = buildHash(activeTab, activeProject);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      window.history.replaceState(null, "", newHash);
+    } else if (window.location.hash !== newHash) {
+      window.history.pushState(null, "", newHash);
+    }
+  }, [activeTab, activeProject]);
 
   // On mount, register a visit using a persistent device ID stored in localStorage.
   useEffect(() => {
