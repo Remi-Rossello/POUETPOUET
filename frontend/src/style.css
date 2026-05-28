@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Uncial+Antiqua&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap");
 
 /* === THEME AND VARIABLES === */
 :root {
@@ -124,22 +124,12 @@ body {
 }
 
 .brand-name {
-  font-family: "Cinzel Decorative", "Uncial Antiqua", "Times New Roman", serif;
-  font-size: 0.98rem;
-  letter-spacing: 0.06em;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.07em;
   text-transform: none;
-  font-weight: 400;
+  font-weight: 500;
   color: #f5f7fa;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.32rem;
-}
-
-.brand-name::before,
-.brand-name::after {
-  content: "❦";
-  font-size: 0.72em;
-  opacity: 0.82;
 }
 
 .header-nav {
