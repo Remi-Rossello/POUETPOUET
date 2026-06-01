@@ -323,7 +323,7 @@ a:focus-visible,
 }
 
 #panel-home {
-  padding-top: 2.5rem;
+  padding-top: 0;
 }
 
 /* === SECTION HOME === */
@@ -479,7 +479,7 @@ a:focus-visible,
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  margin: 3.5rem 0 0;
+  margin: 6rem 0 0;
 }
 
 .home-category-card {
