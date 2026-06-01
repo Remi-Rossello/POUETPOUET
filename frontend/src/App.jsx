@@ -11,6 +11,14 @@ const CredentialsTab = lazy(() => import("./tabs/credentials/CredentialsTab"));
 
 const latestNewsItems = [
   {
+    id: "home",
+    title: "New Home page",
+    status: "Available",
+    date: "June 1st 2026",
+    sortDate: "2026-06-01",
+    hint: "You are looking at it",
+  },
+  {
     id: "visitor-count",
     title: "Live visitor counter",
     status: "Available",
@@ -89,6 +97,7 @@ function App() {
   const initialState = parseHash(window.location.hash);
   const [activeTab, setActiveTab] = useState(initialState.activeTab);
   const [activeProject, setActiveProject] = useState(initialState.activeProject);
+  const [activeCertification, setActiveCertification] = useState(false);
   const [aboutTrack, setAboutTrack] = useState("engineering");
   const isFirstRender = useRef(true);
   const [visits, setVisits] = useState(null);
@@ -158,6 +167,45 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [activeProject, activeTab]);
 
+  // Ticker animation
+  const tickerInnerRef = useRef(null);
+  const tickerAnimRef = useRef(null);
+  const tickerLastTimeRef = useRef(null);
+  const tickerOffsetRef = useRef(0);
+  const tickerSpeedRef = useRef(65); // px/sec, positive = scroll left
+
+  useEffect(() => {
+    const step = (ts) => {
+      if (!tickerLastTimeRef.current) tickerLastTimeRef.current = ts;
+      const dt = (ts - tickerLastTimeRef.current) / 1000;
+      tickerLastTimeRef.current = ts;
+      const inner = tickerInnerRef.current;
+      if (inner) {
+        const half = inner.scrollWidth / 2;
+        if (half > 0) {
+          tickerOffsetRef.current = ((tickerOffsetRef.current + tickerSpeedRef.current * dt) % half + half) % half;
+          inner.style.transform = `translateX(-${tickerOffsetRef.current}px)`;
+        }
+      }
+      tickerAnimRef.current = requestAnimationFrame(step);
+    };
+    tickerAnimRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(tickerAnimRef.current);
+  }, []);
+
+  const handleTickerMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width; // 0 = far left, 1 = far right
+    const MAX_SPEED = 320;
+    // pos=0 → fast right (reveal left/older), pos=0.5 → stop, pos=1 → fast left (normal forward)
+    tickerSpeedRef.current = (pos - 0.5) * 2 * MAX_SPEED;
+  };
+
+  const handleTickerMouseLeave = () => {
+    tickerSpeedRef.current = 65;
+    tickerLastTimeRef.current = null;
+  };
+
   /**
     * Opens the Projects tab and selects a specific project.
     * @param {string} projectId Project identifier to display.
@@ -177,54 +225,43 @@ function App() {
         {activeTab === "home" && (
           <section id="panel-home" role="tabpanel" aria-labelledby="tab-home">
             <h1 className="about-rainbow-title">Welcome to my website !</h1>
-            <div className="home-panels">
-              <section className="home-panel" aria-label="Comming soon">
-                <h2 className="home-panel-title">Comming soon</h2>
-                <div className="home-panel-list">
-                  <button className="home-panel-card" type="button" onClick={() => openProjectTab("computer-roadmap")}>
-                    <span className="home-panel-card-title">The ultimate computer roadmap</span>
-                    <span className="home-panel-card-status">Planned</span>
-                    <span className="home-panel-card-link">Open in Projects →</span>
-                  </button>
-                </div>
-              </section>
 
-              <section className="home-panel" aria-label="Latest news">
-                <h2 className="home-panel-title">Latest news</h2>
-                <div className="home-panel-list">
-                  {latestNewsItems.map((item) => (
-                    <button
-                      key={item.id}
-                      className="home-panel-card"
-                      type="button"
-                      onClick={item.hint ? undefined : () => openProjectTab(item.id)}
-                      style={item.hint ? { cursor: "default" } : undefined}
-                    >
-                      <span className="home-panel-card-head">
-                        <span className="home-panel-card-title">{item.title}</span>
-                        <span className="home-panel-card-date">{item.date}</span>
-                      </span>
-                      <span className="home-panel-card-status">{item.status}</span>
-                      {item.previewMath && (
-                        <span className="home-panel-preview-math" aria-hidden="true">{item.previewMath}</span>
-                      )}
-                      <span className="home-panel-card-link">{item.hint ?? "Open in Projects →"}</span>
-                    </button>
-                  ))}
-                </div>
-              </section>
+            <div className="home-category-grid">
+              <div className="home-category-card">
+                <img
+                  className="home-category-img"
+                  src="/assets/images/projects/field-catalog.jpg"
+                  alt="Standard Model field diagram"
+                />
+                <span className="home-category-overlay">
+                  <span className="home-category-label">Physics</span>
+                </span>
+              </div>
+              <div className="home-category-card">
+                <img
+                  className="home-category-img"
+                  src="/assets/images/projects/digit-recognizer.jpg"
+                  alt="AI digit recognizer"
+                />
+                <span className="home-category-overlay">
+                  <span className="home-category-label">Computers</span>
+                </span>
+              </div>
+              <div className="home-category-card">
+                <img
+                  className="home-category-img"
+                  src="/assets/images/projects/spintronics.jpg"
+                  alt="Spintronics spin diagram"
+                />
+                <span className="home-category-overlay">
+                  <span className="home-category-label">Publications</span>
+                </span>
+              </div>
             </div>
-            <div className="home-visit-counter">
-              <span className="button button-secondary" aria-label="Unique visitors">
-                Fun fact: {visits ?? "…"} unique browsers have visited this website !
-              </span>
-              <span
-                className="visit-counter-info"
-                title="Counted from browser UUIDs generated once, then added in both a backend SQL database and in the browser's localStorage"
-                aria-label="How visitors are counted"
-              >
-                i
-              </span>
+            <div className="home-category-footer">
+              <button className="button button-secondary home-see-projects-btn" type="button" onClick={() => setActiveTab("projects")}>
+                See all projects →
+              </button>
             </div>
           </section>
         )}
@@ -233,14 +270,13 @@ function App() {
           <section id="panel-about" role="tabpanel" aria-labelledby="tab-about">
             <h1 className="content-title">About</h1>
             <section className="about-story" aria-label="About introduction">
-              <div className="about-top-media">
-                <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
-              </div>
+              <img className="about-profile-pic" src="/assets/images/profile-pic.png" alt="Rémi Rossello profile" />
               <h2 className="about-story-title">Hi.</h2>
               <p className="about-story-text">
                 My name is Rémi Rossello, I come from Vence, a small but beautiful town on the French Riviera. Growing
-                up, I wanted to know exactly why we are here and how the universe works. When I found out it was too
-                hard, I began learning computer science instead ;) This website is part of the result.
+                up, I always wanted to know how things works. First, the universe, prompting me
+                to learn a lot about physics and astronomy. Then, computers, leading me to learn all I could about them from logic gates
+                to pixels on the screen, and resulting in this Website.
               </p>
 
               <h2 className="about-story-title">Experiences</h2>
@@ -251,12 +287,10 @@ function App() {
                 concentrating on the mining of space resources, specifically Lunar water. There, I made use of both
                 materials science and programming skills for ESA-sponsored experiments. 
                 Then, I briefly joined the Cosmochemistry and Planetology team at the Petrological and Geochemical
-                Research Center (CRPG) in Nancy, France, again as in intern. With my tutor Jessica Flahaut and <abbr title="French national space agency">CNES</abbr>
-                 engineer Nicolas Théret, we co-authored a scientific proceeding on the spectral identification of Lunar
-                minerals thanks to scripts I had written in IDL. 
-                Both experiences were related to planned rover missions on the Moon, but sadly, OffWorld's mission was
-                scrapped due to lack of funding. The scientific proceeding, however, was presented at the European Lunar
-                Symposium 2025 in Munster, Germany.
+                Research Center (CRPG) in Nancy, France, again as in intern. With my tutor Jessica Flahaut and <abbr title="French national space agency">CNES </abbr> 
+                engineer Nicolas Théret, we co-authored a scientific proceeding on the spectral identification of Lunar
+                minerals thanks to scripts I had written in IDL. This paper was presented at the European Lunar Symposium 2025 in Munster, Germany.
+                Today, I am working for Scale AI as a "math expert", writing and correcting math problems for LLM RLHF training.
               </p>
 
               <h2 className="about-story-title">The computer science journey</h2>
@@ -266,18 +300,15 @@ function App() {
                 sought to understand in detail the mysterious and magical world of computers. 
                 The starting point was NandGames, a game allowing one to build a CPU and RAM, level by level, from
                 transistors, to Nand gates, and then circuits, RAM, ALU, CPU, and finally binary instructions and
-                assembly scripts running on this home-made computer. 
-                Then, I learned more about real assembly and C, reading the classic "Operating systems in three easy pieces". Putting
-                this in practice, I installed Linux and experimented. The next chapter was getting certified in
-                full-stack development, html/css, js, ts, react, downloading VSCode, learning the good practices,
-                using LLMs, learning how LLMs work...
+                Assembly scripts running on this home-made computer. 
+                Then, I learned more about real Assembly and C, reading the classic "Operating systems in three easy pieces". Putting
+                this in practice, I installed Linux and experimented. The next chapter was getting certified in real-world skills, like
+                full-stack development, HTML/CSS, JavaScript, TypeScript, React, Node.js, SQL, and even Quantum Computing with the IMB framework.
               </p>
 
               <h2 className="about-story-title">What's next</h2>
               <p className="about-story-text">
-                Today, I'm working as a "math expert", writing and correcting math prompts for LLM RLHF training.
-                The next step is to work in a more stimulating aerospace and/or software engineering role. Please hire
-                me 🙏
+                I am currently looking for a new job in software engineering. If you are a recruiter, feel free to reach out to me on <a href="https://www.linkedin.com/in/r%C3%A9mi-rossello-9bba2521b/" target="_blank" rel="noreferrer">LinkedIn</a> or by email at <a href="mailto:remi.rossello@gmail.com">remi.rossello@gmail.com</a>.
               </p>
             </section>
 
@@ -383,10 +414,72 @@ function App() {
 
         {activeTab === "certifications" && (
           <Suspense fallback={<p className="project-loading">Loading credentials...</p>}>
-            <CredentialsTab />
+            <CredentialsTab onDetailChange={setActiveCertification} />
           </Suspense>
         )}
       </section>
+      {activeTab === "home" && (
+        <div
+          className="news-ticker-wrapper"
+          aria-label="Latest news"
+        >
+          <div className="news-ticker-label" aria-hidden="true">
+            <span className="news-ticker-dot" />
+            LATEST
+          </div>
+          <div
+            className="news-ticker-track"
+            onMouseMove={handleTickerMouseMove}
+            onMouseLeave={handleTickerMouseLeave}
+          >
+            <div className="news-ticker-inner" ref={tickerInnerRef}>
+              {[...latestNewsItems, ...latestNewsItems].map((item, i) => (
+                <span key={`wrap-${i}`} className="news-ticker-item-wrap">
+                  {(i === 0 || i === latestNewsItems.length) && (
+                    <span className="news-ticker-separator-block" aria-hidden="true">
+                      <span className="news-ticker-sep-arrow">← Oldest</span>
+                      <span className="news-ticker-sep-divider" />
+                      <span className="news-ticker-sep-arrow">Newest →</span>
+                    </span>
+                  )}
+                  <button
+                    className="news-ticker-item"
+                    type="button"
+                    onClick={item.hint ? undefined : () => openProjectTab(item.id)}
+                    style={item.hint ? { cursor: "default" } : undefined}
+                    tabIndex={i >= latestNewsItems.length ? -1 : 0}
+                    aria-hidden={i >= latestNewsItems.length ? "true" : undefined}
+                  >
+                    <span className="news-ticker-item-date">{item.date}</span>
+                    <span className="news-ticker-separator" aria-hidden="true">·</span>
+                    <span className="news-ticker-item-title">{item.title}</span>
+                    <span
+                      className="news-ticker-item-badge"
+                      data-status={item.status === "Available" ? "available" : "progress"}
+                    >
+                      {item.status}
+                    </span>
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {!activeProject && !activeCertification && (
+        <footer className="site-footer" aria-live="polite">
+          <span className="button button-secondary" aria-label="Unique visitors">
+            {visits ?? "…"} unique browsers have visited this website !
+          </span>
+          <span
+            className="visit-counter-info"
+            title="Counted from browser UUIDs generated once, then added in both a backend SQL database and in the browser's localStorage"
+            aria-label="How visitors are counted"
+          >
+            i
+          </span>
+        </footer>
+      )}
     </main>
   );
 }

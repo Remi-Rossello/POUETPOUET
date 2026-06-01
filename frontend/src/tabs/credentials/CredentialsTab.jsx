@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { certificationItems, linkedInCertificationsUrl } from "./certificationItems";
 
-function CredentialsTab() {
+function CredentialsTab({ onDetailChange }) {
   const [selectedCertification, setSelectedCertification] = useState(null);
 
+  const selectCertification = (cert) => {
+    setSelectedCertification(cert);
+    onDetailChange?.(cert !== null);
+  };
   const certificationSections = ["Computer Science", "Engineering", "Humanities"];
   const canShowVerificationLink =
     selectedCertification?.credentialUrl && selectedCertification.credentialUrl !== linkedInCertificationsUrl;
@@ -31,7 +35,7 @@ function CredentialsTab() {
           {selectedCertification.diplomaImage ? (
             <div className="certification-image-wrap">
               <div className="certification-nav">
-                <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
+                <button className="button button-secondary" type="button" onClick={() => selectCertification(null)}>
                   ← Go back
                 </button>
                 {canShowVerificationLink && (
@@ -53,7 +57,7 @@ function CredentialsTab() {
             </div>
           ) : (
             <div className="certification-nav">
-              <button className="button button-secondary" type="button" onClick={() => setSelectedCertification(null)}>
+              <button className="button button-secondary" type="button" onClick={() => selectCertification(null)}>
                 ← Go back
               </button>
               {canShowVerificationLink && (
@@ -95,7 +99,7 @@ function CredentialsTab() {
                       className="certification-card certification-card-button"
                       key={`${certification.title}-${certification.issuer}`}
                       type="button"
-                      onClick={() => setSelectedCertification(certification)}
+                      onClick={() => selectCertification(certification)}
                     >
                       <div className="certification-card-head">
                         {certification.logoUrl && (
